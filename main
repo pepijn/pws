@@ -5,3 +5,26 @@ require "lib/lichaam"
 orgaansysteem = Lichaam::Orgaansysteem.new
 
 hart = orgaansysteem.hart
+
+3.times { hart.rechter_boezem.vaatinhoud << Lichaam::Bloed.new }
+
+puts
+puts "Rechterboezem: " + hart.rechter_boezem.vaatinhoud.to_s
+puts "Rechterkamer: " + hart.rechter_kamer.vaatinhoud.to_s
+
+puts
+puts "-- Diastole uitgevoerd"
+hart.diastole
+
+puts
+puts "Rechterboezem: " + hart.rechter_boezem.vaatinhoud.to_s
+puts "Rechterkamer: " + hart.rechter_kamer.vaatinhoud.to_s
+
+puts
+puts "-- Systole uitgevoerd"
+hart.systole
+
+puts
+puts "Rechterboezem: " + hart.rechter_boezem.vaatinhoud.to_s
+puts "Rechterkamer: " + hart.rechter_kamer.vaatinhoud.to_s
+puts "Longslagader (#{hart.rechter_kamer.opvolger.class}): " + hart.rechter_kamer.opvolger.vaatinhoud.to_s
