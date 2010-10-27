@@ -7,7 +7,7 @@ LIB_PATH = File.dirname(__FILE__) + "/lichaam/"
   "onderdelen/bloedvaten/ader",
   "onderdelen/bloedvaten/slagader",
 
-  "bloedcel",
+  "bloed",
 
   "onderdelen/orgaan",
   "onderdelen/organen/hart",

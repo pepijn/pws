@@ -8,9 +8,9 @@ module Lichaam
 
         def initialize
           @linker_boezem  = Ruimten::Boezem.new
-          @linker_kamer   = Ruimten::Kamer.new
+          @linker_kamer   = linker_boezem.verbind Ruimten::Kamer.new
           @rechter_boezem = Ruimten::Boezem.new
-          @rechter_kamer  = Ruimten::Kamer.new
+          @rechter_kamer  = rechter_boezem.verbind Ruimten::Kamer.new
         end
 
         # Hartkamerspieren aanspannen
@@ -23,15 +23,18 @@ module Lichaam
           [linker_boezem, rechter_boezem].each {|boezem| boezem.pomp }
         end
 
-        # Boezems en kamers in het hart
-        module Ruimten
-          # Gemeenschappelijk gedrag voor boezems en kamers
-          class Ruimte < Onderdeel
-            # Pomp het bloed uit de hartruimte
-            def pomp
+        # Gemeenschappelijk gedrag voor boezems en kamers
+        class Ruimte < Onderdeel
+          # Pomp het bloed uit de hartruimte
+          def pomp
+            until vaatinhoud.empty? do
+              opvolger.vaatinhoud << vaatinhoud.shift
             end
           end
+        end
 
+        # Boezems en kamers in het hart
+        module Ruimten
           # Hartboezem
           class Boezem < Ruimte
           end

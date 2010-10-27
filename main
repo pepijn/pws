@@ -3,3 +3,5 @@
 require "lib/lichaam"
 
 orgaansysteem = Lichaam::Orgaansysteem.new
+
+hart = orgaansysteem.hart
