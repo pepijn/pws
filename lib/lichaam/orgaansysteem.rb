@@ -21,8 +21,6 @@ module Lichaam
       @longader.verbind @hart.linker_boezem
       @holle_ader.verbind @hart.rechter_boezem
       @kransslagader.verbind @hart
-
-      puts "Het orgaansysteem is samengesteld en de bloedvaten zijn verbonden"
     end
   end
 end

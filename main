@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require "lib/lichaam"
+LIB_PATH = File.dirname(__FILE__) + "/lib/lichaam/"
+require LIB_PATH
 
 orgaansysteem = Lichaam::Orgaansysteem.new
 

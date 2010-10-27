@@ -1,5 +1,3 @@
-LIB_PATH = File.dirname(__FILE__) + "/lichaam/"
-
 [
   "onderdeel",
 
