@@ -4,7 +4,7 @@ module Lichaam
     include Onderdelen::Bloedvaten
     include Onderdelen::Organen
 
-    attr_reader :hart, :longslagader, :longen, :longader
+    attr_reader :hart, :longslagader, :longen, :longader, :aorta
 
     # Bouw het orgaansysteem op
     def initialize

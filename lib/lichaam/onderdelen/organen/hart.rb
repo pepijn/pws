@@ -4,10 +4,10 @@ module Lichaam
       # Het hart
       class Hart < Orgaan
         # Boezems
-        attr_reader :linker_boezem, :linker_kamer
+        attr_reader :rechter_boezem, :linker_boezem
 
         # Kamers
-        attr_reader :rechter_boezem, :rechter_kamer
+        attr_reader :rechter_kamer, :linker_kamer
 
         # Klep tussen rechterboezem en rechterkamer
         attr_reader :tricuspidalisklep
@@ -70,7 +70,7 @@ module Lichaam
             # Begin bij de opvolger van de hartruimte die zojuist heeft gepompt
             huidig = opvolger
 
-            # Zolang er een drukverschil is in de bloedvaten
+            # Zolang er een bloeddrukverschil is in de bloedvaten
             while huidig.bloeddruk > huidig.opvolger.bloeddruk do
               # Kan er uitwisseling plaatsvinden?
               if !huidig.klep || huidig.klep.open?
