@@ -6,8 +6,7 @@ class TestOrgaansysteem < Test::Unit::TestCase
   def setup
     @orgaansysteem = Lichaam::Orgaansysteem.new
     @hart = @orgaansysteem.hart
-    @longslagader = @orgaansysteem.longslagader
-    3.times { @hart.rechter_boezem.vaatinhoud << Lichaam::Bloed.new }
+    6.times { @hart.rechter_boezem.vaatinhoud << Lichaam::Bloed.new }
   end
 
   def test_compleetheid_van_bloedsomloop
@@ -23,25 +22,60 @@ class TestOrgaansysteem < Test::Unit::TestCase
     assert opvolgers.include?(linker_boezem)
   end
 
-  def test_werkende_diastole
-    assert_equal 3, @hart.rechter_boezem.vaatinhoud.size
-    assert_equal 0, @hart.rechter_kamer.vaatinhoud.size
+  def test_boezem_systole
+    refute @hart.tricuspidalisklep.open?
+    refute @hart.mitralisklep.open?
+    refute @hart.aortaklep.open?
+    refute @hart.pulmonalisklep.open?
 
-    @hart.diastole
+    assert_equal 6, @hart.rechter_boezem.bloeddruk
+    assert_equal 0, @hart.rechter_kamer.bloeddruk
 
-    assert_equal 0, @hart.rechter_boezem.vaatinhoud.size
-    assert_equal 3, @hart.rechter_kamer.vaatinhoud.size
+    @hart.boezem_systole
+
+    assert @hart.tricuspidalisklep.open?
+    assert @hart.mitralisklep.open?
+    refute @hart.aortaklep.open?
+    refute @hart.pulmonalisklep.open?
+
+    assert_equal 0, @hart.rechter_boezem.bloeddruk
+    assert_equal 6, @hart.rechter_kamer.bloeddruk
+    assert_equal 0, @orgaansysteem.longslagader.bloeddruk
   end
 
-  def test_werkende_systole
-    @hart.diastole
+  def test_kamer_systole
+    @hart.boezem_systole
 
-    assert_equal 3, @hart.rechter_kamer.vaatinhoud.size
-    assert_equal 0, @longslagader.vaatinhoud.size
+    assert @hart.tricuspidalisklep.open?
+    assert @hart.mitralisklep.open?
+    refute @hart.aortaklep.open?
+    refute @hart.pulmonalisklep.open?
 
-    @hart.systole
+    assert_equal 6, @hart.rechter_kamer.bloeddruk
+    assert_equal 0, @orgaansysteem.longslagader.bloeddruk
 
-    assert_equal 0, @hart.rechter_kamer.vaatinhoud.size
-    assert_equal 3, @longslagader.vaatinhoud.size
+    @hart.kamer_systole
+
+    refute @hart.tricuspidalisklep.open?
+    refute @hart.mitralisklep.open?
+    refute @hart.aortaklep.open?
+    refute @hart.pulmonalisklep.open?
+
+    assert_equal 0, @hart.rechter_kamer.bloeddruk
+    assert_in_delta 6, @orgaansysteem.longslagader.bloeddruk, 3
+  end
+
+  def test_werkende_bloedverspreiding
+    @hart.boezem_systole
+
+    assert_equal 0, @orgaansysteem.longslagader.bloeddruk
+    assert_equal 0, @orgaansysteem.longen.bloeddruk
+    assert_equal 0, @orgaansysteem.longader.bloeddruk
+
+    @hart.kamer_systole
+
+    assert_equal 3, @orgaansysteem.longslagader.bloeddruk
+    assert_equal 2, @orgaansysteem.longen.bloeddruk
+    assert_equal 1, @orgaansysteem.longader.bloeddruk
   end
 end
