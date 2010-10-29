@@ -60,8 +60,6 @@ module Lichaam
 
         # Gemeenschappelijk gedrag voor boezems en kamers
         class Ruimte < Onderdeel
-          attr_accessor :klep
-
           # Pomp het bloed uit de hartruimte
           def trek_samen
             # Al het bloed wordt naar het volgende onderdeel gepompt
