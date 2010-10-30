@@ -4,18 +4,29 @@ module Lichaam
     include Onderdelen::Bloedvaten
     include Onderdelen::Organen
 
-    attr_reader :hart, :longslagader, :longen, :longader, :aorta
+    ONDERDELEN = [
+      :hart,
+      :longslagader,
+      :longen,
+      :longader,
+      :aorta,
+      :kransslagader,
+      :kransader,
+      :holle_ader
+    ]
+
+    attr_reader *ONDERDELEN
 
     # Bouw het orgaansysteem op
     def initialize
       @hart           = Hart.new
-      @aorta          = @hart.linker_kamer.verbind Slagader.new
-      @kransslagader  = @aorta.verbind Slagader.new
-      @kransader      = @hart.verbind Ader.new
-      @holle_ader     = @kransader.verbind Ader.new
-      @longslagader   = @hart.rechter_kamer.verbind Slagader.new
-      @longen         = @longslagader.verbind Longen.new
-      @longader       = @longen.verbind Ader.new
+      @aorta          = @hart.linker_kamer.verbind Slagader.new("Aorta")
+      @kransslagader  = @aorta.verbind Slagader.new("Kransslagader")
+      @kransader      = @hart.verbind Ader.new("Kransader")
+      @holle_ader     = @kransader.verbind Ader.new("Holle ader")
+      @longslagader   = @hart.rechter_kamer.verbind Slagader.new("Longslagader")
+      @longen         = @longslagader.verbind Longen.new("Longen")
+      @longader       = @longen.verbind Ader.new("Longader")
 
       # Verbind hart
       @longader.verbind @hart.linker_boezem

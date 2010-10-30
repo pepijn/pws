@@ -19,10 +19,13 @@ module Lichaam
         attr_reader :pulmonalisklep, :aortaklep
 
         def initialize
-          @linker_boezem  = Ruimten::Boezem.new
-          @linker_kamer   = linker_boezem.verbind Ruimten::Kamer.new
-          @rechter_boezem = Ruimten::Boezem.new
-          @rechter_kamer  = rechter_boezem.verbind Ruimten::Kamer.new
+          # Initializeer als een normaal onderdeel
+          super("Hart")
+
+          @linker_boezem  = Ruimten::Boezem.new("Linker boezem")
+          @linker_kamer   = linker_boezem.verbind Ruimten::Kamer.new("Linker kamer")
+          @rechter_boezem = Ruimten::Boezem.new("Rechter boezem")
+          @rechter_kamer  = rechter_boezem.verbind Ruimten::Kamer.new("Rechter kamer")
 
           @tricuspidalisklep = @linker_boezem.klep  = Klep.new
           @mitralisklep      = @rechter_boezem.klep = Klep.new
@@ -64,24 +67,6 @@ module Lichaam
           def trek_samen
             # Al het bloed wordt naar het volgende onderdeel gepompt
             verplaats_bloed(bloeddruk) if klep.open?
-
-            # Begin bij de opvolger van de hartruimte die zojuist heeft gepompt
-            huidig = opvolger
-
-            # Zolang er een bloeddrukverschil is in de bloedvaten
-            while huidig.bloeddruk > huidig.opvolger.bloeddruk do
-              # Kan er uitwisseling plaatsvinden?
-              if !huidig.klep || huidig.klep.open?
-                # Bereken het drukverschil tussen twee aneenliggende onderdelen
-                drukdelta = (huidig.bloeddruk - huidig.opvolger.bloeddruk) / 2
-
-                # Verplaats het bloed van hoge druk naar lage druk
-                huidig.verplaats_bloed(drukdelta)
-              end
-
-              # Verder naar het volgende onderdeel
-              huidig = huidig.opvolger
-            end
           end
         end
 

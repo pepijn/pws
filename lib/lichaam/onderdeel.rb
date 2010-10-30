@@ -2,10 +2,11 @@ module Lichaam
   # Abstracte klasse van elk onderdeel in het lichaam dat bloed bevat
   class Onderdeel
     # Methode om het bloed dat in een onderdeel zit te benaderen en te manipuleren
-    attr_accessor :vaatinhoud, :klep
+    attr_accessor :naam, :vaatinhoud, :klep
 
     # Initializeer een nieuw onderdeel, maak de vaatinhoud leeg
-    def initialize
+    def initialize(naam)
+      @naam       = naam
       @vaatinhoud = []
     end
 
@@ -27,6 +28,14 @@ module Lichaam
       druk.times do
         opvolger.vaatinhoud << vaatinhoud.shift
       end
+    end
+
+    # Computerweergave
+    def to_json(*args)
+      {
+        :naam      => naam,
+        :bloeddruk => bloeddruk
+      }.to_json
     end
   end
 end
