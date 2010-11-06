@@ -20,12 +20,12 @@ module Lichaam
 
         def initialize
           # Initializeer als een normaal onderdeel
-          super("Hart")
+          super
 
-          @linker_boezem  = Ruimten::Boezem.new("Linker boezem")
-          @linker_kamer   = linker_boezem.verbind Ruimten::Kamer.new("Linker kamer")
-          @rechter_boezem = Ruimten::Boezem.new("Rechter boezem")
-          @rechter_kamer  = rechter_boezem.verbind Ruimten::Kamer.new("Rechter kamer")
+          @linker_boezem  = Ruimten::Boezem.new
+          @linker_kamer   = linker_boezem.verbind Ruimten::Kamer.new
+          @rechter_boezem = Ruimten::Boezem.new
+          @rechter_kamer  = rechter_boezem.verbind Ruimten::Kamer.new
 
           @tricuspidalisklep = @linker_boezem.klep  = Klep.new
           @mitralisklep      = @rechter_boezem.klep = Klep.new
@@ -59,6 +59,16 @@ module Lichaam
         end
 
         def kamer_diasystole
+        end
+
+        def to_json(*args)
+          {
+            "Spier"         => self.bloeddruk,
+            "Linkerboezem"  => linker_boezem,
+            "Linkerkamer"   => linker_kamer,
+            "Rechterboezem" => rechter_boezem,
+            "Rechterkamer"  => rechter_kamer
+          }.to_json
         end
 
         # Gemeenschappelijk gedrag voor boezems en kamers

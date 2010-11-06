@@ -9,19 +9,33 @@
         width: 800px;
       }
     </style>
-    
+
     <script src="javascripts/jquery.js"></script>
     <script type="text/javascript" charset="utf-8">
-      $(document).ready(function(){
+      $(function() {
         function debug(str){ $("#container").append("<p>"+str+"</p>"); };
 
         ws = new WebSocket("ws://localhost:8080");
-        ws.onmessage = function(evt) { $("#msg").append("<p>"+evt.data+"</p>"); };
+        ws.onmessage = function(evt) {
+          $("#container").html("<p>"+evt.data+"</p>");
+        };
         ws.onclose = function() { debug("socket closed"); };
         ws.onopen = function() {
           debug("connected...");
           ws.send("hello server");
         };
+
+        setInterval(function() {
+          ws.send("vernieuw");
+        }, 60);
+
+        setInterval(function() {
+          ws.send("boezemsystole")
+
+          setTimeout(function() {
+            ws.send("kamersystole")
+          }, 100);
+        }, 1000)
       });
     </script>
   </head>

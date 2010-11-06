@@ -5,49 +5,29 @@ require LIB_PATH
 require 'json'
 require 'em-websocket'
 
-EventMachine
+orgaansysteem = Lichaam::Orgaansysteem
 
 EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
-  ws.onopen    { ws.send "Verbonden"}
-  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
-  ws.onclose   { puts "WebSocket gesloten" }
+  ws.onopen do
+    orgaansysteem = orgaansysteem.new
+    5000.times { orgaansysteem["Aorta"].vaatinhoud << Lichaam::Bloed.new }
+    puts "Orgaansysteem aangemaakt"
+  end
+
+  ws.onmessage do |opdracht|
+    case opdracht
+    when 'vernieuw'
+      ws.send orgaansysteem.vernieuw!
+    when 'boezemsystole'
+      ws.send orgaansysteem["Hart"].boezem_systole
+    when 'kamersystole'
+      ws.send orgaansysteem["Hart"].kamer_systole
+    end
+  end
+
+  ws.onclose do
+    orgaansysteem = Lichaam::Orgaansysteem
+    GC.start
+    puts "Orgaansysteem verwijderd"
+   end
 end
-
-orgaansysteem = Lichaam::Orgaansysteem.new
-hart = orgaansysteem.hart
-
-100.times { hart.rechter_boezem.vaatinhoud << Lichaam::Bloed.new }
-
-# get '/orgaansysteem' do
-#   # Begin bij de opvolger van de hartruimte die zojuist heeft gepompt
-#   [hart.linker_kamer, hart.rechter_kamer].each do |kamer|
-#     huidig = kamer.opvolger
-# 
-#     # Zolang er een bloeddrukverschil is in de bloedvaten
-#     while huidig.bloeddruk > huidig.opvolger.bloeddruk do
-#       # Kan er uitwisseling plaatsvinden?
-#       if !huidig.klep || huidig.klep.open?
-#         # Bereken het drukverschil tussen twee aneenliggende onderdelen
-#         drukdelta = (huidig.bloeddruk - huidig.opvolger.bloeddruk) / 2
-# 
-#         # Verplaats het bloed van hoge druk naar lage druk
-#         huidig.verplaats_bloed(drukdelta)
-#       end
-# 
-#       # Verder naar het volgende onderdeel
-#       huidig = huidig.opvolger
-#     end
-#   end
-# 
-#   content_type :json
-#   [
-#     orgaansysteem.longen,
-#     orgaansysteem.longslagader,
-#     orgaansysteem.longader,
-#     hart,
-#     hart.rechter_boezem,
-#     hart.rechter_kamer,
-#     hart.linker_boezem,
-#     hart.linker_kamer
-#   ].to_json
-# end

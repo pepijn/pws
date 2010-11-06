@@ -1,6 +1,6 @@
 module Lichaam
   # Het geheel aan organen in een lichaam
-  class Orgaansysteem
+  class Orgaansysteem < Hash
     include Onderdelen::Bloedvaten
     include Onderdelen::Organen
 
@@ -19,19 +19,47 @@ module Lichaam
 
     # Bouw het orgaansysteem op
     def initialize
-      @hart           = Hart.new
-      @aorta          = @hart.linker_kamer.verbind Slagader.new("Aorta")
-      @kransslagader  = @aorta.verbind Slagader.new("Kransslagader")
-      @kransader      = @hart.verbind Ader.new("Kransader")
-      @holle_ader     = @kransader.verbind Ader.new("Holle ader")
-      @longslagader   = @hart.rechter_kamer.verbind Slagader.new("Longslagader")
-      @longen         = @longslagader.verbind Longen.new("Longen")
-      @longader       = @longen.verbind Ader.new("Longader")
+      self.merge!({
+        "Hart"           => Hart.new,
+        "Aorta"          => Slagader.new,
+        "Kransslagader"  => Slagader.new,
+        "Kransader"      => Ader.new,
+        "Holle ader"     => Ader.new,
+        "Longslagader"   => Slagader.new,
+        "Longen"         => Longen.new,
+        "Longader"       => Ader.new
+      })
 
-      # Verbind hart
-      @longader.verbind @hart.linker_boezem
-      @holle_ader.verbind @hart.rechter_boezem
-      @kransslagader.verbind @hart
+      # Verbind onderdelen
+      self["Hart"].linker_kamer.verbind self["Aorta"]
+      self["Aorta"].verbind self["Kransslagader"]
+      self["Kransslagader"].verbind self["Hart"]
+      self["Hart"].verbind self["Kransader"]
+      self["Kransader"].verbind self["Hart"].rechter_boezem
+      self["Holle ader"].verbind self["Hart"].rechter_boezem
+      self["Hart"].rechter_kamer.verbind self["Longslagader"]
+      self["Longslagader"].verbind self["Longen"]
+      self["Longen"].verbind self["Longader"]
+      self["Longader"].verbind self["Hart"].linker_boezem
+    end
+
+    # Verspreid het bloed en stuur de gegevens van het orgaansysteem
+    def vernieuw!
+      self.each_value do |onderdeel|
+        # Zolang er een bloeddrukverschil is in de bloedvaten
+        if onderdeel.bloeddruk > onderdeel.opvolger.bloeddruk
+          # Kan er uitwisseling plaatsvinden?
+          if !onderdeel.klep || onderdeel.klep.open?
+            # Bereken het drukverschil tussen twee aneenliggende onderdelen
+            drukdelta = (onderdeel.bloeddruk - onderdeel.opvolger.bloeddruk) / 2
+
+            # Verplaats het bloed van hoge druk naar lage druk
+            onderdeel.verplaats_bloed(drukdelta)
+          end
+        end
+      end
+
+      to_json
     end
   end
 end
