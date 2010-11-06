@@ -63,7 +63,7 @@ module Lichaam
 
         def to_json(*args)
           {
-            "Spier"         => self.bloeddruk,
+            # "Spier"         => self,
             "Linkerboezem"  => linker_boezem,
             "Linkerkamer"   => linker_kamer,
             "Rechterboezem" => rechter_boezem,

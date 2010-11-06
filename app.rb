@@ -10,7 +10,7 @@ orgaansysteem = Lichaam::Orgaansysteem
 EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
   ws.onopen do
     orgaansysteem = orgaansysteem.new
-    5000.times { orgaansysteem["Aorta"].vaatinhoud << Lichaam::Bloed.new }
+    5000.times { orgaansysteem["Hart"].linker_boezem.vaatinhoud << Lichaam::Bloed.new }
     puts "Orgaansysteem aangemaakt"
   end
 
@@ -19,9 +19,13 @@ EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
     when 'vernieuw'
       ws.send orgaansysteem.vernieuw!
     when 'boezemsystole'
-      ws.send orgaansysteem["Hart"].boezem_systole
+      puts "Boezemsystole"
+      orgaansysteem["Hart"].boezem_systole
+      ws.send orgaansysteem.vernieuw!
     when 'kamersystole'
-      ws.send orgaansysteem["Hart"].kamer_systole
+      puts "Kamersystole\n\n"
+      orgaansysteem["Hart"].kamer_systole
+      ws.send orgaansysteem.vernieuw!
     end
   end
 

@@ -51,7 +51,7 @@ module Lichaam
           # Kan er uitwisseling plaatsvinden?
           if !onderdeel.klep || onderdeel.klep.open?
             # Bereken het drukverschil tussen twee aneenliggende onderdelen
-            drukdelta = (onderdeel.bloeddruk - onderdeel.opvolger.bloeddruk) / 2
+            drukdelta = (onderdeel.bloeddruk - onderdeel.opvolger.bloeddruk) / 5
 
             # Verplaats het bloed van hoge druk naar lage druk
             onderdeel.verplaats_bloed(drukdelta)

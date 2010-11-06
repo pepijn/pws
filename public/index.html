@@ -9,44 +9,19 @@
         width: 800px;
       }
     </style>
-
-    <script src="javascripts/jquery.js"></script>
-    <script type="text/javascript" charset="utf-8">
-      $(function() {
-        function debug(str){ $("#container").append("<p>"+str+"</p>"); };
-
-        ws = new WebSocket("ws://localhost:8080");
-        ws.onmessage = function(evt) {
-          $("#container").html("<p>"+evt.data+"</p>");
-        };
-        ws.onclose = function() { debug("socket closed"); };
-        ws.onopen = function() {
-          debug("connected...");
-          ws.send("hello server");
-        };
-
-        setInterval(function() {
-          ws.send("vernieuw");
-        }, 60);
-
-        setInterval(function() {
-          ws.send("boezemsystole")
-
-          setTimeout(function() {
-            ws.send("kamersystole")
-          }, 100);
-        }, 1000)
-      });
-    </script>
   </head>
   <body>
-    <div id="container"></div>
+    <div id="container">
+      <div id="debug"></div>
+    </div>
 
-    <!-- <script src="/javascripts/jquery.js"></script>
-    <script src="/javascripts/underscore.js"></script>
-    <script src="/javascripts/backbone.js"></script>
-    <script src="/javascripts/raphael.js"></script>
-    <script src="/javascripts/orgaansysteem.paths.js"></script>
-    <script src="/javascripts/application.js"></script> -->
+    <input type="text" name="hartslagfrequentie" value="1000" id="hartslagfrequentie">
+
+    <script src="javascripts/jquery.js"></script>
+    <!--
+    <script src="javascripts/raphael.js"></script>
+    <script src="javascripts/orgaansysteem.paths.js"></script>
+    -->
+    <script src="javascripts/application.js"></script>
   </body>
 </html>
