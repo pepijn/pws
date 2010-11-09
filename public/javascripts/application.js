@@ -4,14 +4,7 @@ $(function() {
     $("#debug").html(evt.data);
 
 		$.each(JSON.parse(evt.data), function(naam, data) {
-			// onderdeel = onderdelen[naam];
-			// if(onderdeel) {
-			// 	huidig = $(onderdeel.node).attr("min-bloeddruk");
-			//
-			// 	if(data.bloeddruk < huidig)
-			// 		$(onderdeel.node).attr("min-bloeddruk", data.bloeddruk);
-
-			// }
+			$(onderdeel).attr("opacity", data.bloeddruk / 100);
 		});
   };
 

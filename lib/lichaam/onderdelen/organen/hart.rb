@@ -78,6 +78,9 @@ module Lichaam
 
         # Gemeenschappelijk gedrag voor boezems en kamers
         class Ruimte < Onderdeel
+          # Hartklep
+          attr_accessor :klep
+
           # Pomp het bloed uit de hartruimte
           def trek_samen
             # Al het bloed wordt naar het volgende onderdeel gepompt
@@ -93,6 +96,14 @@ module Lichaam
 
           # Hartkamer
           class Kamer < Ruimte
+            # Volume van een hartkamer in mL
+            HARTKAMER_VOLUME = 80 # mL
+
+            def initialize
+              super
+
+              @volume = HARTKAMER_VOLUME
+            end
           end
         end
 
