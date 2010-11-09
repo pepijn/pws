@@ -46,17 +46,7 @@ module Lichaam
     # Verspreid het bloed en stuur de gegevens van het orgaansysteem
     def vernieuw!
       self.each_value do |onderdeel|
-        # Zolang er een bloeddrukverschil is in de bloedvaten
-        if onderdeel.bloeddruk > onderdeel.opvolger.bloeddruk
-          # Kan er uitwisseling plaatsvinden?
-          if !onderdeel.klep || onderdeel.klep.open?
-            # Bereken het drukverschil tussen twee aneenliggende onderdelen
-            drukdelta = (onderdeel.bloeddruk - onderdeel.opvolger.bloeddruk) / 5
-
-            # Verplaats het bloed van hoge druk naar lage druk
-            onderdeel.verplaats_bloed(drukdelta)
-          end
-        end
+        onderdeel.vernieuw
       end
 
       to_json

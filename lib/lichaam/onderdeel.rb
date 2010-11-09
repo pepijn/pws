@@ -22,6 +22,26 @@ module Lichaam
       @opvolger = onderdeel
     end
 
+    # Diffundeer het bloed in dit onderdeel naar het volgende
+    def diffundeer_bloed!
+      # Zolang er een bloeddrukverschil is in de bloedvaten
+      if bloeddruk > opvolger.bloeddruk
+        # Kan er uitwisseling plaatsvinden?
+        if !klep || klep.open?
+          # Bereken het drukverschil tussen twee aneenliggende onderdelen
+          drukdelta = (bloeddruk - opvolger.bloeddruk) / 5
+
+          # Verplaats het bloed van hoge druk naar lage druk
+          verplaats_bloed(drukdelta)
+        end
+      end
+    end
+
+    # Herhalende check
+    def vernieuw
+      diffundeer_bloed!
+    end
+
     # Verplaatst bloed met een bepaalde bloeddruk naar z'n opvolger
     def verplaats_bloed(druk)
       druk.times do

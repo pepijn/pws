@@ -34,9 +34,6 @@ module Lichaam
         end
 
         def boezem_systole
-          # Open kleppen van boezems naar kamers
-          [tricuspidalisklep, mitralisklep].each {|klep| klep.open! }
-
           # Trek spier samen
           [linker_boezem, rechter_boezem].each {|boezem| boezem.trek_samen }
         end
@@ -53,12 +50,20 @@ module Lichaam
 
           # Sluit kleppen van kamers naar slagaders
           [pulmonalisklep, aortaklep].each {|klep| klep.sluit! }
+
+          # Open kleppen van kamers naar boezems
+          [tricuspidalisklep, mitralisklep].each {|klep| klep.open! }
         end
 
         def boezem_diasystole
         end
 
         def kamer_diasystole
+        end
+
+        # Override standaard activeerfunctie
+        def vernieuw
+          [self, linker_boezem, rechter_boezem].map &:diffundeer_bloed!
         end
 
         def to_json(*args)
