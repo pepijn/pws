@@ -30,7 +30,7 @@ EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
   end
 
   ws.onclose do
-    orgaansysteem = Lichaam::Orgaansysteem.reload
+    orgaansysteem = Lichaam::Orgaansysteem
     GC.start
     puts "Orgaansysteem verwijderd"
    end
