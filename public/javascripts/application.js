@@ -20,19 +20,21 @@ $(function() {
     ws.send("vernieuw");
   }, 20);
 
+	var pomp = function(ruimte, kracht) {
+		ruimte.animate({scale: kracht + " " + kracht + " 85 60"}, 50, function() {
+			ruimte.animate({scale: "1 1 85 60"}, 150);
+		});
+	}
+
 	function hartslag() {
 		ws.send("boezemsystole");
-		onderdelen["Linkerboezem"].scale(0.80);
-		onderdelen["Rechterboezem"].scale(0.80);
-		onderdelen["Linkerboezem"].animate({scale: 1}, 200);
-		onderdelen["Rechterboezem"].animate({scale: 1}, 200);
+		pomp(onderdelen["Linkerboezem"], 0.80);
+		pomp(onderdelen["Rechterboezem"], 0.80);
 
 		setTimeout(function() {
 		  ws.send("kamersystole");
-			onderdelen["Linkerkamer"].scale(0.60);
-			onderdelen["Rechterkamer"].scale(0.60);
-			onderdelen["Linkerkamer"].animate({scale: 1}, 200);
-			onderdelen["Rechterkamer"].animate({scale: 1}, 150);
+			pomp(onderdelen["Linkerkamer"], 0.60);
+			pomp(onderdelen["Rechterkamer"], 0.60);
 		}, 100);
 
 		setTimeout(function() {
