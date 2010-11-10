@@ -5,7 +5,7 @@
   "onderdelen/bloedvaten/ader",
   "onderdelen/bloedvaten/slagader",
 
-  "bloed",
+  "bloed/rode_bloedcel",
 
   "onderdelen/orgaan",
   "onderdelen/organen/hart",

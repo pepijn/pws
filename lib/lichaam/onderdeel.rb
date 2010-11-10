@@ -2,7 +2,7 @@ module Lichaam
   # Abstracte klasse van elk onderdeel in het lichaam dat bloed bevat
   class Onderdeel
     # In welke mate wordt per vernieuwingsronde bloed overgebracht?
-    DRUKVERSCHIL_DELER = 5
+    DIFFUSIVITEIT = 0.1
 
     # Wat is het kunstmatige maximale volume per onderdeel?
     MAXIMAAL_STANDAARD_VOLUME = 500
@@ -37,10 +37,10 @@ module Lichaam
       # Zolang er een bloed.drukverschil is in de bloedvaten
       if bloed.druk > opvolger.bloed.druk
         # Bereken het drukverschil tussen twee aneenliggende onderdelen
-        drukdelta = (bloed.druk - opvolger.bloed.druk) / DRUKVERSCHIL_DELER
+        drukdelta = DIFFUSIVITEIT * (bloed.druk - opvolger.bloed.druk)
 
         # Verplaats het bloed van hoge druk naar lage druk
-        verplaats_bloed(drukdelta)
+        verplaats_bloed(drukdelta.ceil)
       end
     end
 
@@ -67,6 +67,10 @@ module Lichaam
       # Hoeveel bloed zit erin?
       def druk
         self.size
+      end
+
+      # De concentratie van het bloed
+      def concentratie
       end
     end
   end
