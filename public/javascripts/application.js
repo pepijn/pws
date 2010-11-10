@@ -21,13 +21,18 @@ $(function() {
   }, 20);
 
 	function hartslag() {
-		ws.send("boezemsystole")
-		onderdelen["Hart"].scale(0.95);
+		ws.send("boezemsystole");
+		onderdelen["Linkerboezem"].scale(0.80);
+		onderdelen["Rechterboezem"].scale(0.80);
+		onderdelen["Linkerboezem"].animate({scale: 1}, 200);
+		onderdelen["Rechterboezem"].animate({scale: 1}, 200);
 
 		setTimeout(function() {
-		  ws.send("kamersystole")
- 			onderdelen["Hart"].scale(0.9);
-			onderdelen["Hart"].animate({scale: 1}, parseInt($("#hartslagfrequentie").val()) - 300);
+		  ws.send("kamersystole");
+			onderdelen["Linkerkamer"].scale(0.60);
+			onderdelen["Rechterkamer"].scale(0.60);
+			onderdelen["Linkerkamer"].animate({scale: 1}, 200);
+			onderdelen["Rechterkamer"].animate({scale: 1}, 150);
 		}, 100);
 
 		setTimeout(function() {

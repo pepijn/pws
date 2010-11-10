@@ -32,6 +32,11 @@ module Lichaam
       @opvolger = onderdeel
     end
 
+    # Herhalende check met interval
+    def vernieuw
+      diffundeer_bloed!
+    end
+
     # Diffundeer het bloed in dit onderdeel naar het volgende
     def diffundeer_bloed!
       # Zolang er een bloeddrukverschil is in de bloedvaten
@@ -44,14 +49,11 @@ module Lichaam
       end
     end
 
-    # Herhalende check
-    def vernieuw
-      diffundeer_bloed!
-    end
-
     # Verplaatst bloed met een bepaalde bloeddruk naar z'n opvolger
     def verplaats_bloed(druk)
       druk.times do
+        # Stop met verplaatsing van bloed als bloeddruk hoger of gelijk aan het
+        # volume van het opvolgende onderdeel is
         break if opvolger.bloeddruk >= opvolger.volume
 
         opvolger.vaatinhoud << vaatinhoud.shift

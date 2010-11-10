@@ -66,16 +66,6 @@ module Lichaam
           [self, linker_boezem, rechter_boezem].map &:diffundeer_bloed!
         end
 
-        def to_json(*args)
-          {
-            # "Spier"         => self,
-            "Linkerboezem"  => linker_boezem,
-            "Linkerkamer"   => linker_kamer,
-            "Rechterboezem" => rechter_boezem,
-            "Rechterkamer"  => rechter_kamer
-          }.to_json
-        end
-
         # Gemeenschappelijk gedrag voor boezems en kamers
         class Ruimte < Onderdeel
           # Hartklep

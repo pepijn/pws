@@ -30,17 +30,23 @@ module Lichaam
         "Longader"       => Ader.new
       })
 
+      # Maak een connectie met de hartboezems en kamers
+      self["Linkerkamer"]   = self["Hart"].linker_kamer
+      self["Linkerboezem"]  = self["Hart"].linker_boezem
+      self["Rechterkamer"]  = self["Hart"].rechter_kamer
+      self["Rechterboezem"] = self["Hart"].rechter_boezem
+
       # Verbind onderdelen
-      self["Hart"].linker_kamer.verbind self["Aorta"]
+      self["Linkerkamer"].verbind self["Aorta"]
       self["Aorta"].verbind self["Kransslagader"]
       self["Kransslagader"].verbind self["Hart"]
       self["Hart"].verbind self["Kransader"]
-      self["Kransader"].verbind self["Hart"].rechter_boezem
-      self["Holle ader"].verbind self["Hart"].rechter_boezem
-      self["Hart"].rechter_kamer.verbind self["Longslagader"]
+      self["Kransader"].verbind self["Rechterboezem"]
+      self["Holle ader"].verbind self["Rechterboezem"]
+      self["Rechterkamer"].verbind self["Longslagader"]
       self["Longslagader"].verbind self["Longen"]
       self["Longen"].verbind self["Longader"]
-      self["Longader"].verbind self["Hart"].linker_boezem
+      self["Longader"].verbind self["Linkerboezem"]
     end
 
     # Verspreid het bloed en stuur de gegevens van het orgaansysteem
