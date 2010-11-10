@@ -7,21 +7,16 @@ module Lichaam
     # Wat is het kunstmatige maximale volume per onderdeel?
     MAXIMAAL_STANDAARD_VOLUME = 500
 
-    # Methode om het bloed dat in een onderdeel zit te benaderen en te manipuleren
-    attr_reader :vaatinhoud
+    # Bloed in het onderdeel
+    attr_reader :bloed
 
     # Maximaal volume van een onderdel
     attr_reader :volume
 
     # Initializeer een nieuw onderdeel, maak de vaatinhoud leeg
     def initialize
-      @vaatinhoud = []
-      @volume     = MAXIMAAL_STANDAARD_VOLUME
-    end
-
-    # Abstractie van bloeddruk in aantal Bloed-objecten per onderdeel
-    def bloeddruk
-      vaatinhoud.size
+      @bloed  = BloedHouder.new
+      @volume = MAXIMAAL_STANDAARD_VOLUME
     end
 
     # Het orgaan wat in de volgorde van de bloedsomloop na dit onderdeel volgt
@@ -39,32 +34,40 @@ module Lichaam
 
     # Diffundeer het bloed in dit onderdeel naar het volgende
     def diffundeer_bloed!
-      # Zolang er een bloeddrukverschil is in de bloedvaten
-      if bloeddruk > opvolger.bloeddruk
+      # Zolang er een bloed.drukverschil is in de bloedvaten
+      if bloed.druk > opvolger.bloed.druk
         # Bereken het drukverschil tussen twee aneenliggende onderdelen
-        drukdelta = (bloeddruk - opvolger.bloeddruk) / DRUKVERSCHIL_DELER
+        drukdelta = (bloed.druk - opvolger.bloed.druk) / DRUKVERSCHIL_DELER
 
         # Verplaats het bloed van hoge druk naar lage druk
         verplaats_bloed(drukdelta)
       end
     end
 
-    # Verplaatst bloed met een bepaalde bloeddruk naar z'n opvolger
+    # Verplaatst bloed met een bepaalde bloed.druk naar z'n opvolger
     def verplaats_bloed(druk)
       druk.times do
-        # Stop met verplaatsing van bloed als bloeddruk hoger of gelijk aan het
+        # Stop met verplaatsing van bloed als bloed.druk hoger of gelijk aan het
         # volume van het opvolgende onderdeel is
-        break if opvolger.bloeddruk >= opvolger.volume
+        break if opvolger.bloed.druk >= opvolger.volume
 
-        opvolger.vaatinhoud << vaatinhoud.shift
+        opvolger.bloed << bloed.shift
       end
     end
 
     # Computerweergave
     def to_json(*args)
       {
-        :bloeddruk => bloeddruk
+        :bloeddruk => bloed.druk
       }.to_json
+    end
+
+    # Inhoud van de bloedvaten van een onderdeel
+    class BloedHouder < Array
+      # Hoeveel bloed zit erin?
+      def druk
+        self.size
+      end
     end
   end
 end

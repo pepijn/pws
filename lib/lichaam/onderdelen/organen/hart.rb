@@ -74,7 +74,7 @@ module Lichaam
           # Pomp het bloed uit de hartruimte
           def trek_samen
             # Al het bloed wordt naar het volgende onderdeel gepompt
-            verplaats_bloed(bloeddruk) if klep.open?
+            verplaats_bloed(bloed.druk) if klep.open?
           end
         end
 
