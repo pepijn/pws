@@ -1,9 +1,17 @@
 [
-  "onderdeel",
+  "molecuul",
+  "moleculen/zuurstof"
+].each do |library|
+  require LIB_PATH + "omgeving/" + library
+end
 
+[
+  "onderdeel",
   "onderdelen/bloedvat",
   "onderdelen/bloedvaten/ader",
   "onderdelen/bloedvaten/slagader",
+
+  "eiwitten/hemoglobine",
 
   "bloed/rode_bloedcel",
 
@@ -13,5 +21,5 @@
 
   "orgaansysteem"
 ].each do |library|
-  require LIB_PATH + library
+  require LIB_PATH + "lichaam/" + library
 end

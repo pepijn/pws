@@ -4,9 +4,11 @@ $(function() {
     $("#debug").html(evt.data);
 
 		$.each(JSON.parse(evt.data), function(naam, data) {
-			onderdeel = onderdelen[naam];
+			var onderdeel = onderdelen[naam];
+			var verhouding = data.bloed.oxihemoglobinen * 0.5;
 			if(onderdeel) {
-				onderdeel.attr("fill-opacity", data.bloeddruk / 100);
+				onderdeel.attr("fill", "rgb(" + verhouding + ",0," + (255 - verhouding) + ")");
+				onderdeel.attr("fill-opacity", data.bloed.druk / 100);
 			}
 		});
   };

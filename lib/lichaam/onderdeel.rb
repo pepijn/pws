@@ -28,7 +28,7 @@ module Lichaam
     end
 
     # Herhalende check met interval
-    def vernieuw
+    def vernieuw!
       diffundeer_bloed!
     end
 
@@ -47,8 +47,7 @@ module Lichaam
     # Verplaatst bloed met een bepaalde bloed.druk naar z'n opvolger
     def verplaats_bloed(druk)
       druk.times do
-        # Stop met verplaatsing van bloed als bloed.druk hoger of gelijk aan het
-        # volume van het opvolgende onderdeel is
+        # Stop met verplaatsing van bloed als bloed.druk hoger of gelijk aan het volume van het opvolgende onderdeel is
         break if opvolger.bloed.druk >= opvolger.volume
 
         opvolger.bloed << bloed.shift
@@ -58,7 +57,7 @@ module Lichaam
     # Computerweergave
     def to_json(*args)
       {
-        :bloeddruk => bloed.druk
+        :bloed => bloed.json
       }.to_json
     end
 
@@ -69,8 +68,16 @@ module Lichaam
         self.size
       end
 
-      # De concentratie van het bloed
-      def concentratie
+      # Totaal aan hemoglobine eiwitten in een hoeveelheid bloed
+      def oxihemoglobinen
+        self.inject(0) {|totaal, rb| totaal += rb.oxihemoglobinen.size }
+      end
+
+      def json
+        {
+          :druk => druk,
+          :oxihemoglobinen => oxihemoglobinen
+        }
       end
     end
   end

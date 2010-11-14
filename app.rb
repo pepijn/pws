@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-LIB_PATH = File.dirname(__FILE__) + "/lib/lichaam/"
-require LIB_PATH
+LIB_PATH = File.dirname(__FILE__) + "/lib/"
+require LIB_PATH + 'pws'
 require 'json'
 require 'em-websocket'
 
@@ -11,6 +11,7 @@ EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
   ws.onopen do
     orgaansysteem = orgaansysteem.new
     650.times { orgaansysteem["Longader"].bloed << Lichaam::Bloed::RodeBloedcel.new }
+    1000.times { orgaansysteem["Longen"].alveolair_vocht << Omgeving::Moleculen::Zuurstof.new }
     puts "Orgaansysteem aangemaakt"
   end
 

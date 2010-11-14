@@ -52,7 +52,7 @@ module Lichaam
     # Verspreid het bloed en stuur de gegevens van het orgaansysteem
     def vernieuw!
       self.each_value do |onderdeel|
-        onderdeel.vernieuw
+        onderdeel.vernieuw!
       end
 
       to_json

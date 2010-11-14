@@ -62,7 +62,7 @@ module Lichaam
         end
 
         # Override standaard activeerfunctie
-        def vernieuw
+        def vernieuw!
           [self, linker_boezem, rechter_boezem].map &:diffundeer_bloed!
         end
 
