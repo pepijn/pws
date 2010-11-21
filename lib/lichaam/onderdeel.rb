@@ -11,7 +11,7 @@ module Lichaam
     attr_reader :bloed
 
     # Maximaal volume van een onderdel
-    attr_reader :volume
+    attr_accessor :volume
 
     # Initializeer een nieuw onderdeel, maak de vaatinhoud leeg
     def initialize
