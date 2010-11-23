@@ -1,28 +1,85 @@
 $(function() {
-	// Creates canvas 640 × 480 at 10, 50
-	var r = Raphael(10, 50, 640, 480);
-	// Creates pie chart at with center at 320, 200,
-	// radius 100 and data: [55, 20, 13, 32, 5, 1, 2]
-
 	var bloeddruk_chart, oxihemoglobinen_chart;
 
+	chart = new Highcharts.Chart({
+	        chart: {
+	            renderTo: 'chart',
+	            type: 'spline',
+							animation: false,
+							reflow: false
+	        },
+	        title: {
+	            text: 'Live random data'
+	        },
+	        xAxis: {
+	            type: 'datetime',
+	            tickPixelInterval: 150,
+	            maxZoom: 20 * 1000
+	        },
+	        yAxis: {
+	            minPadding: 0.2,
+	            maxPadding: 0.2,
+	            title: {
+	                text: 'Value',
+	                margin: 80
+	            },
+							min: 0,
+							max: 200
+	        },
+	        series: [{
+	            name: 'Hart',
+	            data: []
+	        }, {
+							name: 'Onderdeel',
+							data:[]
+					}		, {
+									name: 'Onderdeel',
+									data:[]
+							}		, {
+											name: 'Onderdeel',
+											data:[]
+									}		, {
+													name: 'Onderdeel',
+													data:[]
+											}		, {
+															name: 'Onderdeel',
+															data:[]
+													}		, {
+																	name: 'Onderdeel',
+																	data:[]
+															}		, {
+																			name: 'Onderdeel',
+																			data:[]
+																	}		, {
+																					name: 'Onderdeel',
+																					data:[]
+																			}		, {
+																							name: 'Onderdeel',
+																							data:[]
+																					}		, {
+																									name: 'Onderdeel',
+																									data:[]
+																							}
+					]
+	    });
+
   var ws = new WebSocket("ws://localhost:8080");
+
+	var serie;
   ws.onmessage = function(evt) {
     $("#debug").html(evt.data);
 
-		var legend = [];
-		var bloeddruk = [];
-		var oxihemoglobinen = [];
+		serie = 0;
 
 		$.each(JSON.parse(evt.data), function(naam, data) {
-			legend.push(naam);
-			bloeddruk.push(data.bloed.druk);
-			oxihemoglobinen.push(data.bloed.oxihemoglobinen > 0 ?  data.bloed.oxihemoglobinen : 40);
-		});
+			// add the point
+	    chart.series[serie].addPoint(data.bloed.druk, true, chart.series[0].data.length > 20);
 
-		r.clear();
-		bloeddruk_chart = r.g.piechart(300, 300, 150, bloeddruk, { legend: legend });
-		// oxihemoglobinen_chart = r.g.piechart(400, 240, 100, oxihemoglobinen, { legend: legend });
+			serie++;
+
+			if(serie > 5)
+				break;
+		});
   };
 
   ws.onclose = function() { $("#debug").html("Verbinding gesloten") };
@@ -32,7 +89,7 @@ $(function() {
 
   setInterval(function() {
     ws.send("vernieuw");
-  }, 20);
+  }, 50);
 
 	var pomp = function(ruimte, kracht) {
 		ruimte.animate({scale: kracht + " " + kracht + " 85 60"}, 50, function() {
