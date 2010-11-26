@@ -2,7 +2,7 @@ module Lichaam
   # Abstracte klasse van elk onderdeel in het lichaam dat bloed bevat
   class Onderdeel
     # In welke mate wordt per vernieuwingsronde bloed overgebracht?
-    DIFFUSIVITEIT = 0.1
+    DIFFUSIVITEIT = 0.05
 
     # Wat is het kunstmatige maximale volume per onderdeel?
     MAXIMAAL_STANDAARD_VOLUME = 500
