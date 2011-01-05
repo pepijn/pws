@@ -1,85 +1,15 @@
+var appData = {"Rechterkamer":{"bloed":{"oxihemoglobinen":20,"druk":4}},"Longslagader":{"bloed":{"oxihemoglobinen":500,"druk":123}},"Longen":{"bloed":{"oxihemoglobinen":0,"druk":74}},"Longader":{"bloed":{"oxihemoglobinen":0,"druk":38}},"Kransader":{"bloed":{"oxihemoglobinen":200,"druk":40}},"Hart":{"bloed":{"oxihemoglobinen":245,"druk":78}},"Kransslagader":{"bloed":{"oxihemoglobinen":0,"druk":114}},"Linkerboezem":{"bloed":{"oxihemoglobinen":0,"druk":7}},"Aorta":{"bloed":{"oxihemoglobinen":0,"druk":161}},"Linkerkamer":{"bloed":{"oxihemoglobinen":0,"druk":4}},"Holle ader":{"bloed":{"oxihemoglobinen":0,"druk":0}},"Rechterboezem":{"bloed":{"oxihemoglobinen":35,"druk":7}}};
+
 $(function() {
-	var bloeddruk_chart, oxihemoglobinen_chart;
-
-	chart = new Highcharts.Chart({
-	        chart: {
-	            renderTo: 'chart',
-	            type: 'spline',
-							animation: false,
-							reflow: false
-	        },
-	        title: {
-	            text: 'Live random data'
-	        },
-	        xAxis: {
-	            type: 'datetime',
-	            tickPixelInterval: 150,
-	            maxZoom: 20 * 1000
-	        },
-	        yAxis: {
-	            minPadding: 0.2,
-	            maxPadding: 0.2,
-	            title: {
-	                text: 'Value',
-	                margin: 80
-	            },
-							min: 0,
-							max: 200
-	        },
-	        series: [{
-	            name: 'Hart',
-	            data: []
-	        }, {
-							name: 'Onderdeel',
-							data:[]
-					}		, {
-									name: 'Onderdeel',
-									data:[]
-							}		, {
-											name: 'Onderdeel',
-											data:[]
-									}		, {
-													name: 'Onderdeel',
-													data:[]
-											}		, {
-															name: 'Onderdeel',
-															data:[]
-													}		, {
-																	name: 'Onderdeel',
-																	data:[]
-															}		, {
-																			name: 'Onderdeel',
-																			data:[]
-																	}		, {
-																					name: 'Onderdeel',
-																					data:[]
-																			}		, {
-																							name: 'Onderdeel',
-																							data:[]
-																					}		, {
-																									name: 'Onderdeel',
-																									data:[]
-																							}
-					]
-	    });
-
   var ws = new WebSocket("ws://localhost:8080");
 
 	var serie;
   ws.onmessage = function(evt) {
-    $("#debug").html(evt.data);
+    appData = JSON.parse(evt.data);
+    $("#debug").html(JSON.stringify(appData));
 
 		serie = 0;
 
-		$.each(JSON.parse(evt.data), function(naam, data) {
-			// add the point
-	    chart.series[serie].addPoint(data.bloed.druk, true, chart.series[0].data.length > 20);
-
-			serie++;
-
-			if(serie > 5)
-				break;
-		});
   };
 
   ws.onclose = function() { $("#debug").html("Verbinding gesloten") };

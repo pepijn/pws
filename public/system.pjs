@@ -1,0 +1,68 @@
+// All Examples Written by Casey Reas and Ben Fry
+// unless otherwise stated.
+int xspacing = 8;   // How far apart should each horizontal location be spaced
+int w;              // Width of entire wave
+int i = 0;
+int iMax = 100;
+
+float amplitude = 150.0;  // Height of wave
+HashMap onds = new HashMap(3);
+
+void setup() {
+  size(900,400);
+  frameRate(35);
+  colorMode(RGB,255,255,255,100);
+  smooth();
+  w = width+16;
+
+  onds.put("Longslagader", new float[0]);
+  onds.put("Aorta", new float[0]);
+  onds.put("Linkerboezem", new float[0]);
+  onds.put("Linkerkamer", new float[0]);
+}
+
+void draw() {
+  background(0);
+  calcWave();
+  renderWave();
+
+}
+
+void calcWave() {
+  Iterator onders = onds.entrySet().iterator();  // Get an iterator
+
+  while (onders.hasNext()) {
+    Map.Entry ond = (Map.Entry)onders.next();
+
+    if(i > iMax) {
+      ond.getValue().shift();
+    }
+
+    ond.getValue()[i] = appData[ond.getKey()].bloed.druk;
+  }
+
+  if(i > iMax) {
+    i = 100;
+  } else {
+    i += 1;
+  }
+}
+
+void renderWave() {
+  // A simple way to draw the wave with an ellipse at each location
+
+  Iterator onders = onds.entrySet().iterator();
+
+  while (onders.hasNext()) {
+    Map.Entry ond = (Map.Entry)onders.next();
+
+    for (int x = 0; x < iMax; x++) {
+      noStroke();
+      fill(255, 0 ,50);
+      ellipseMode(LEFT);
+
+      ellipse(x*xspacing,ond.getValue()[x],16,16);
+    }
+
+  }
+}
