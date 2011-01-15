@@ -7,7 +7,7 @@ table {
 }
 
 td {
-  padding: 10px;
+  padding: 5px;
 }
 
 th#bloeddruk {
@@ -17,4 +17,10 @@ th#bloeddruk {
 div.bloeddruk {
   background: red;
   height: 20px;
+  padding: 5px;
+  color: white;
+}
+
+label {
+  display: block;
 }
