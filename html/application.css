@@ -10,11 +10,11 @@ td {
   padding: 5px;
 }
 
-th#bloeddruk {
+th#volume {
   width: 100%;
 }
 
-div.bloeddruk {
+div.bloedvolume {
   background: red;
   height: 20px;
   padding: 5px;

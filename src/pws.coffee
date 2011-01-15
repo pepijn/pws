@@ -1,57 +1,64 @@
-DIFFUSIVITEIT = 0.1
-STANDAARD_MAXIMAAL_VOLUME = 500 # halve liter, kunstmatig
+DIFFUSIVITEIT = 0.5
 
+HART_CONTRACTIE_SNELHEID = 0.9
 HART_ONTSPANNING_SNELHEID = 0.5
-HARTKAMER_VOLUME = 80 # mL
-HARTBOEZEM_VOLUME = 27 # mL, 1/3 van hartkamer
+HARTKAMER_VOLUME = 800 # mL * 10
+HARTBOEZEM_VOLUME = 270 # mL * 10, 1/3 van hartkamer
 
 class Onderdeel
-  constructor: ->
-    @bloeddruk = 0
-    @volume = STANDAARD_MAXIMAAL_VOLUME
-
-  vrij_volume: ->
-    @volume - @bloeddruk
+  constructor: (kleppen) ->
+    @bloedvolume = 0
+    @kleppen = kleppen ? false
 
   vernieuw: ->
     @diffundeer_bloed()
 
-  diffundeer_bloed: ->
-    drukdelta = @bloeddruk - @opvolger.bloeddruk
+  # Drukverschil met opvolger
+  drukverschil: ->
+    @bloedvolume - @opvolger.bloedvolume
 
-    if drukdelta > 0
-      hoeveelheid = Math.ceil(drukdelta * DIFFUSIVITEIT)
+  verplaats_bloed: (hoeveelheid) ->
+    hoeveelheid = Math.floor(hoeveelheid)
+    @bloedvolume          -= hoeveelheid
+    @opvolger.bloedvolume += hoeveelheid
+
+  diffundeer_bloed: ->
+    hoeveelheid = @drukverschil() * DIFFUSIVITEIT
+
+    # Bloed kan niet terugstromen als het opvolgende onderdeel kleppen heeft
+    unless hoeveelheid < 0 and @opvolger.kleppen
       @verplaats_bloed hoeveelheid
 
     return this
 
-  verplaats_bloed: (hoeveelheid) ->
-    hoeveelheid = @volume if hoeveelheid > @volume
-
-    if hoeveelheid <= @opvolger.vrij_volume()
-      @bloeddruk -= hoeveelheid
-      @opvolger.bloeddruk += hoeveelheid
-
 class Hartruimte extends Onderdeel
+  vrij_volume: ->
+    @max_volume - @bloedvolume
+
   vernieuw: ->
-    @systole if @volume != HARTKAMER_VOLUME
+    if @contractie > 0
+      # Het hart spant zich aan, hoeveel bloed wordt weggepompt?
+      @contractie *= HART_CONTRACTIE_SNELHEID
+
+      hoeveelheid = @bloedvolume * @contractie
+
+      @verplaats_bloed hoeveelheid
 
     @diffundeer_bloed()
 
   systole: ->
-    @systole = true
-
+    @contractie = 1
 
 class Hartboezem extends Hartruimte
   constructor: ->
     super
-    @volume = HARTBOEZEM_VOLUME
+    @max_volume = HARTBOEZEM_VOLUME
 
 class Hartkamer extends Hartruimte
   constructor: ->
     super
-    @volume = HARTKAMER_VOLUME
-
+    @max_volume = HARTKAMER_VOLUME
+    @kleppen = true
 
 class Bloedvat extends Onderdeel
   #constructor: ->
@@ -59,3 +66,4 @@ class Bloedvat extends Onderdeel
 class Ader extends Bloedvat
   constructor: ->
     super
+    @kleppen = true
