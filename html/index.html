@@ -5,25 +5,65 @@
     <link rel="stylesheet" href="application.css">
   </head>
   <body>
-    <div id="debug"></div>
-    <table id="onderdelen">
-      <thead>
-        <tr>
-          <th>Onderdeel</th>
-          <th>Volume</th>
-          <th id="volume">Bloedvolume</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <fieldset>
+      <legend>Bloedvolume simulatie</legend>
+      <table id="onderdelen">
+        <thead>
+          <tr>
+            <th>Onderdeel</th>
+            <th>Maximaal volume (mL)</th>
+            <th id="volume">Bloedvolume (mL)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </fieldset>
 
     <fieldset>
       <legend>Parameters</legend>
 
       <form id="parameters">
-        <label>Bloedinjectie in Aorta:
-          <input name="bloedinjectie" id="bloedinjectie" type="text" value="4500">
+        <label>Bloedtransfusie Aorta:
+          <input name="bloedinjectie" id="bloedinjectie" type="text" value="800">
         </label>
+
+        <table id="hart">
+          <tr>
+            <td colspan="2" class="hartslag">
+              <label>Hartslag:
+                <input name="hartslag" id="hartslag" type="text" value="80">
+              </label>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <label>Kracht rechterboezem
+                <input name="rechterboezem" id="rechterboezem" type="text" value="200">
+              </label>
+            </td>
+
+            <td>
+              <label>Kracht linkerboezem
+                <input name="linkerboezem" id="linkerboezem" type="text" value="200">
+              </label>
+            </td>
+          </tr>
+
+          <tr class="kamers">
+            <td>
+              <label>Kracht rechterkamer
+                <input name="rechterkamer" id="rechterkamer" type="text" value="800">
+              </label>
+            </td>
+
+            <td>
+              <label>Kracht linkerkamer
+                <input name="linkerkamer" id="linkerkamer" type="text" value="1000">
+              </label>
+            </td>
+          </tr>
+        </table>
 
         <input type="submit">
       </form>

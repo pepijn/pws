@@ -1,14 +1,17 @@
-DIFFUSIVITEIT = 0.5
+DIFFUSIVITEIT = 0.1
 
-HART_CONTRACTIE_SNELHEID = 0.9
-HART_ONTSPANNING_SNELHEID = 0.5
-HARTKAMER_VOLUME = 800 # mL * 10
-HARTBOEZEM_VOLUME = 270 # mL * 10, 1/3 van hartkamer
+HARTBOEZEM_CONTRACTIE_SNELHEID = 5
+HART_ONTSPANNING_SNELHEID = 5
+HARTKAMER_VOLUME = 80 # mL * 10
+HARTBOEZEM_VOLUME = 27 # mL * 10, 1/3 van hartkamer
 
 class Onderdeel
   constructor: (kleppen) ->
     @bloedvolume = 0
     @kleppen = kleppen ? false
+
+    # Standaard is het onderdeel (meestal bloedvat) rekbaar
+    @max_volume = @volume
 
   vernieuw: ->
     @diffundeer_bloed()
@@ -17,48 +20,52 @@ class Onderdeel
   drukverschil: ->
     @bloedvolume - @opvolger.bloedvolume
 
-  verplaats_bloed: (hoeveelheid) ->
-    hoeveelheid = Math.floor(hoeveelheid)
-    @bloedvolume          -= hoeveelheid
-    @opvolger.bloedvolume += hoeveelheid
-
   diffundeer_bloed: ->
-    hoeveelheid = @drukverschil() * DIFFUSIVITEIT
+    # Duw bloed wat het niet kan hebben naar volgende onderdeel
+    verschil = @max_volume - @bloedvolume
+    if @max_volume > 0 and verschil < 0
+      @bloedvolume += verschil
+      @opvolger.bloedvolume -= verschil
 
-    # Bloed kan niet terugstromen als het opvolgende onderdeel kleppen heeft
-    unless hoeveelheid < 0 and @opvolger.kleppen
-      @verplaats_bloed hoeveelheid
+    # Bloed naar andere onderdelen
+    hoeveelheid = Math.floor(@drukverschil() * DIFFUSIVITEIT)
+
+    while hoeveelheid >= 0
+      @bloedvolume--
+      @opvolger.bloedvolume++
+
+      hoeveelheid--
 
     return this
 
 class Hartruimte extends Onderdeel
-  vrij_volume: ->
-    @max_volume - @bloedvolume
-
   vernieuw: ->
-    if @contractie > 0
+    if @contract
       # Het hart spant zich aan, hoeveel bloed wordt weggepompt?
-      @contractie *= HART_CONTRACTIE_SNELHEID
+      i = @kracht / @volume
 
-      hoeveelheid = @bloedvolume * @contractie
+      while i >= 0
+        if @max_volume > 0
+          @max_volume--
+        else
+          @contract = false
 
-      @verplaats_bloed hoeveelheid
+        i--
+    else
+      # Bij ontspanning kan de hartruimte gevuld worden
+      @max_volume = @volume
 
     @diffundeer_bloed()
 
-  systole: ->
-    @contractie = 1
-
 class Hartboezem extends Hartruimte
   constructor: ->
+    @volume = HARTBOEZEM_VOLUME
     super
-    @max_volume = HARTBOEZEM_VOLUME
 
 class Hartkamer extends Hartruimte
   constructor: ->
+    @volume = HARTKAMER_VOLUME
     super
-    @max_volume = HARTKAMER_VOLUME
-    @kleppen = true
 
 class Bloedvat extends Onderdeel
   #constructor: ->
