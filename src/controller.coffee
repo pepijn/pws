@@ -6,12 +6,12 @@ initializeOnderdelen = ->
     Linkerkamer:    new Hartkamer,
     Aorta:          new Onderdeel(true),
     Kransslagader:  new Onderdeel,
-    Hart:           new Onderdeel,
+    Hart:           new Hart,
     Kransader:      new Ader,
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
     Longslagader:   new Onderdeel(true),
-    Longen:         new Onderdeel,
+    Longen:         new Longen,
     Longader:       new Ader
   }
 
@@ -54,13 +54,16 @@ $('#parameters').submit ->
   volume = params.bloedinjectie
 
   while volume > 0
-    onderdelen.Aorta.bloed.push new Bloed
+    onderdelen.Aorta.bloed.push new Vloeistof
     volume--
 
   onderdelen.Rechterboezem.kracht = params.rechterboezem
   onderdelen.Linkerboezem.kracht  = params.linkerboezem
   onderdelen.Rechterkamer.kracht  = params.rechterkamer
   onderdelen.Linkerkamer.kracht   = params.linkerkamer
+
+  onderdelen.Longen.rendement = params.longrendement
+  onderdelen.Hart.rendement   = params.hartrendement
 
   if alive
     clearInterval(onderdelenInterval)

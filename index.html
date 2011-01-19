@@ -6,12 +6,25 @@
   </head>
   <body>
     <fieldset>
-      <legend>Bloedvolume simulatie</legend>
+      <legend>Bloedconcentratie</legend>
       <table id="onderdelen">
         <thead>
           <tr>
             <th>Onderdeel</th>
             <th>Maximaal volume (mL)</th>
+            <th id="volume">Bloedvolume (mL)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Longvolume</legend>
+      <table id="longen">
+        <thead>
+          <tr>
+            <th>Onderdeel</th>
             <th id="volume">Bloedvolume (mL)</th>
           </tr>
         </thead>
@@ -27,11 +40,19 @@
           <input name="bloedinjectie" id="bloedinjectie" type="text" value="800">
         </label>
 
+        <label>Rendement longen:
+          <input name="longrendement" id="longrendement" type="text" value="100">
+        </label>
+
         <table id="hart">
           <tr>
             <td colspan="2" class="hartslag">
               <label>Hartslag:
                 <input name="hartslag" id="hartslag" type="text" value="80">
+              </label>
+
+              <label>Rendement spier:
+                <input name="hartrendement" id="hartrendement" type="text" value="100">
               </label>
             </td>
           </tr>

@@ -5,7 +5,7 @@ HART_ONTSPANNING_SNELHEID = 5
 HARTKAMER_VOLUME = 80 # mL * 10
 HARTBOEZEM_VOLUME = 27 # mL * 10, 1/3 van hartkamer
 
-class Bloed
+class Vloeistof
   constructor: ->
     @zuurstofrijk = false
 
@@ -92,3 +92,29 @@ class Ader extends Bloedvat
   constructor: ->
     super
     @kleppen = true
+
+class Orgaan extends Onderdeel
+
+class Hart extends Orgaan
+  vernieuw: ->
+    for bloed in @bloed
+      bloed.zuurstofrijk = false
+
+    @diffundeer_bloed()
+
+class Longen extends Orgaan
+  constructor: ->
+    @lucht = 0
+    super
+
+  respireer: ->
+    @lucht = 200
+
+  vernieuw: ->
+    for bloed in @bloed
+      break unless @lucht
+      bloed.zuurstofrijk = true
+      @lucht--
+
+    @diffundeer_bloed()
+
