@@ -35,7 +35,10 @@ initializeView = ->
       <tr id="' + onderdeel + '">
         <td class="naam">' + onderdeel + '</td>
         <td class="volume"></td>
-        <td><div class="bloedvolume"></div></td>
+        <td class="bloedvolume">
+          <div class="zuurstofrijk"></div>
+          <div class="zuurstofarm"></div>
+        </td>
       </tr>')
 
 initializeOnderdelen()
@@ -74,7 +77,10 @@ loop_organs = ->
     data = onderdeel.vernieuw()
     tr = $('#' + naam)
     tr.find('.volume').text(data.max_volume)
-    tr.find('.bloedvolume').text(data.bloedvolume()).css('width', (data.bloedvolume() / 200) * 100 + '%')
+
+    concs = data.concentraties()
+    tr.find('.zuurstofrijk').text(concs.zuurstofrijk).css('width', (concs.zuurstofrijk / 200) * 100 + '%')
+    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 200) * 100 + '%')
 
 window.hartcyclus = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
@@ -94,3 +100,5 @@ window.hartcyclus = ->
     for onderdeel in [onderdelen.Linkerkamer, onderdelen.Rechterkamer]
       onderdeel.contract = false
   ), 400
+
+$('#parameters').submit()

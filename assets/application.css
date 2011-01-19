@@ -15,13 +15,16 @@ th#volume {
   width: 70%;
 }
 
-div.bloedvolume {
-  background: red;
+td.bloedvolume div {
+  float: left;
   height: 20px;
   padding: 5px 0;
   color: white;
   width: 0;
 }
+
+div.zuurstofrijk { background: red; }
+div.zuurstofarm  { background: blue; }
 
 label {
   display: block;

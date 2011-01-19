@@ -6,6 +6,8 @@ HARTKAMER_VOLUME = 80 # mL * 10
 HARTBOEZEM_VOLUME = 27 # mL * 10, 1/3 van hartkamer
 
 class Bloed
+  constructor: ->
+    @zuurstofrijk = false
 
 class Onderdeel
   constructor: (kleppen) ->
@@ -20,6 +22,16 @@ class Onderdeel
 
   bloedvolume: ->
     @bloed.length
+
+  concentraties: ->
+    concs =
+      zuurstofarm:  0
+      zuurstofrijk: 0
+
+    for bloed in @bloed
+      if bloed.zuurstofrijk then concs.zuurstofrijk++ else concs.zuurstofarm++
+
+    concs
 
   # Drukverschil met opvolger
   drukverschil: ->
