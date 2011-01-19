@@ -41,14 +41,18 @@ initializeView = ->
 initializeOnderdelen()
 initializeView()
 
-$('#parameters').submit(->
+$('#parameters').submit ->
   initializeOnderdelen()
   window.params = {}
   for input in $('#parameters input')
     el = $(input)
     params[el.attr('id')] = parseInt el.val() if el.val() unless el.attr('type') is 'submit'
 
-  onderdelen.Aorta.bloedvolume = params.bloedinjectie
+  volume = params.bloedinjectie
+
+  while volume > 0
+    onderdelen.Aorta.bloed.push new Bloed
+    volume--
 
   onderdelen.Rechterboezem.kracht = params.rechterboezem
   onderdelen.Linkerboezem.kracht  = params.linkerboezem
@@ -64,14 +68,13 @@ $('#parameters').submit(->
 
   alive = true
   return false
-)
 
 loop_organs = ->
   for naam, onderdeel of onderdelen
     data = onderdeel.vernieuw()
     tr = $('#' + naam)
     tr.find('.volume').text(data.max_volume)
-    tr.find('.bloedvolume').text(data.bloedvolume).css('width', (data.bloedvolume / 200) * 100 + '%')
+    tr.find('.bloedvolume').text(data.bloedvolume()).css('width', (data.bloedvolume() / 200) * 100 + '%')
 
 window.hartcyclus = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]

@@ -5,9 +5,11 @@ HART_ONTSPANNING_SNELHEID = 5
 HARTKAMER_VOLUME = 80 # mL * 10
 HARTBOEZEM_VOLUME = 27 # mL * 10, 1/3 van hartkamer
 
+class Bloed
+
 class Onderdeel
   constructor: (kleppen) ->
-    @bloedvolume = 0
+    @bloed = []
     @kleppen = kleppen ? false
 
     # Standaard is het onderdeel (meestal bloedvat) rekbaar
@@ -16,25 +18,29 @@ class Onderdeel
   vernieuw: ->
     @diffundeer_bloed()
 
+  bloedvolume: ->
+    @bloed.length
+
   # Drukverschil met opvolger
   drukverschil: ->
-    @bloedvolume - @opvolger.bloedvolume
+    @bloedvolume() - @opvolger.bloedvolume()
 
   diffundeer_bloed: ->
+    bloedverplaatsing = 0
+
     # Duw bloed wat het niet kan hebben naar volgende onderdeel
-    verschil = @max_volume - @bloedvolume
-    if @max_volume > 0 and verschil < 0
-      @bloedvolume += verschil
-      @opvolger.bloedvolume -= verschil
+    verschil = @bloedvolume() - @max_volume
+    if @max_volume? and verschil > 0
+      bloedverplaatsing += verschil
 
-    # Bloed naar andere onderdelen
+    # Diffusie onderdeel
     hoeveelheid = Math.floor(@drukverschil() * DIFFUSIVITEIT)
+    if hoeveelheid > 0
+      bloedverplaatsing += hoeveelheid
 
-    while hoeveelheid >= 0
-      @bloedvolume--
-      @opvolger.bloedvolume++
-
-      hoeveelheid--
+    while bloedverplaatsing > 0
+      @opvolger.bloed.push @bloed.shift()
+      bloedverplaatsing--
 
     return this
 
@@ -44,7 +50,7 @@ class Hartruimte extends Onderdeel
       # Het hart spant zich aan, hoeveel bloed wordt weggepompt?
       i = @kracht / @volume
 
-      while i >= 0
+      while i > 0
         if @max_volume > 0
           @max_volume--
         else
