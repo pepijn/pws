@@ -28,6 +28,11 @@ initializeOnderdelen = ->
   onderdelen.Longen.opvolger        = onderdelen.Longader
   onderdelen.Longader.opvolger      = onderdelen.Linkerboezem
 
+  volume = 500
+  while volume > 0
+    onderdelen.Aorta.bloed.push new Vloeistof
+    volume--
+
 initializeView = ->
   # Set up table
   for onderdeel of onderdelen
@@ -45,17 +50,10 @@ initializeOnderdelen()
 initializeView()
 
 $('#parameters').submit ->
-  initializeOnderdelen()
   window.params = {}
   for input in $('#parameters input')
     el = $(input)
     params[el.attr('id')] = parseInt el.val() if el.val() unless el.attr('type') is 'submit'
-
-  volume = params.bloedinjectie
-
-  while volume > 0
-    onderdelen.Aorta.bloed.push new Vloeistof
-    volume--
 
   onderdelen.Rechterboezem.kracht = params.rechterboezem
   onderdelen.Linkerboezem.kracht  = params.linkerboezem
@@ -70,7 +68,8 @@ $('#parameters').submit ->
     clearInterval(hartcyclusInterval)
 
   window.onderdelenInterval = setInterval(loop_organs, 30)
-  window.hartcyclusInterval = setInterval(hartcyclus, (60/params.hartslag) * 1000)
+  window.hartcyclusInterval = setInterval(hartslag, (60/params.hartslag) * 1000)
+  window.ventilatieInterval = setInterval(ademhaling, (60/params.ademhalingsfrequentie) * 1000)
 
   alive = true
   return false
@@ -82,10 +81,10 @@ loop_organs = ->
     tr.find('.volume').text(data.max_volume)
 
     concs = data.concentraties()
-    tr.find('.zuurstofrijk').text(concs.zuurstofrijk).css('width', (concs.zuurstofrijk / 200) * 100 + '%')
-    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 200) * 100 + '%')
+    tr.find('.zuurstofrijk').text(concs.zuurstofrijk).css('width', (concs.zuurstofrijk / 130) * 100 + '%')
+    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * 100 + '%')
 
-window.hartcyclus = ->
+window.hartslag = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
     onderdeel.contract = true
 
@@ -103,5 +102,8 @@ window.hartcyclus = ->
     for onderdeel in [onderdelen.Linkerkamer, onderdelen.Rechterkamer]
       onderdeel.contract = false
   ), 400
+
+window.ademhaling = ->
+  onderdelen.Longen.respireer()
 
 $('#parameters').submit()
