@@ -33,26 +33,23 @@ class Onderdeel
 
     concs
 
-  # Drukverschil met opvolger
-  drukverschil: ->
-    @bloedvolume() - @opvolger.bloedvolume()
-
   diffundeer_bloed: ->
-    bloedverplaatsing = 0
+    for opvolger in @opvolger
+      bloedverplaatsing = 0
 
-    # Duw bloed wat het niet kan hebben naar volgende onderdeel
-    verschil = @bloedvolume() - @max_volume
-    if @max_volume? and verschil > 0
-      bloedverplaatsing += verschil
+      # Duw bloed wat het niet kan hebben naar volgende onderdeel
+      verschil = @bloedvolume() - @max_volume
+      if @max_volume? and verschil > 0
+        bloedverplaatsing += verschil
 
-    # Diffusie onderdeel
-    hoeveelheid = Math.floor(@drukverschil() * DIFFUSIVITEIT)
-    if hoeveelheid > 0
-      bloedverplaatsing += hoeveelheid
+      # Diffusie onderdeel
+      hoeveelheid = Math.floor((@bloedvolume() - opvolger.bloedvolume()) * DIFFUSIVITEIT)
+      if hoeveelheid > 0
+        bloedverplaatsing += hoeveelheid
 
-    while bloedverplaatsing > 0
-      @opvolger.bloed.push @bloed.shift()
-      bloedverplaatsing--
+      while bloedverplaatsing > 0
+        opvolger.bloed.push @bloed.shift()
+        bloedverplaatsing--
 
     return this
 
@@ -86,12 +83,13 @@ class Hartkamer extends Hartruimte
     super
 
 class Bloedvat extends Onderdeel
-  #constructor: ->
+  constructor: (volume) ->
+    @volume = volume
+    super
 
 class Ader extends Bloedvat
   constructor: ->
     super
-    @kleppen = true
 
 class Orgaan extends Onderdeel
 

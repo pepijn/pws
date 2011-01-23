@@ -4,29 +4,31 @@ initializeOnderdelen = ->
   window.onderdelen = {
     Linkerboezem:   new Hartboezem,
     Linkerkamer:    new Hartkamer,
-    Aorta:          new Onderdeel(true),
-    Kransslagader:  new Onderdeel,
+    Aorta:          new Onderdeel,
+    Kransslagader:  new Bloedvat(10),
     Hart:           new Hart,
     Kransader:      new Ader,
+    Holleader:      new Ader,
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
-    Longslagader:   new Onderdeel(true),
+    Longslagader:   new Onderdeel,
     Longen:         new Longen,
     Longader:       new Ader
   }
 
-  onderdelen.Linkerboezem.opvolger  = onderdelen.Linkerkamer
-  onderdelen.Linkerkamer.opvolger   = onderdelen.Aorta
-  onderdelen.Aorta.opvolger         = onderdelen.Kransslagader
-  onderdelen.Kransslagader.opvolger = onderdelen.Hart
-  onderdelen.Hart.opvolger          = onderdelen.Kransader
-  onderdelen.Kransader.opvolger     = onderdelen.Hart
-  onderdelen.Kransader.opvolger     = onderdelen.Rechterboezem
-  onderdelen.Rechterboezem.opvolger = onderdelen.Rechterkamer
-  onderdelen.Rechterkamer.opvolger  = onderdelen.Longslagader
-  onderdelen.Longslagader.opvolger  = onderdelen.Longen
-  onderdelen.Longen.opvolger        = onderdelen.Longader
-  onderdelen.Longader.opvolger      = onderdelen.Linkerboezem
+  onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
+  onderdelen.Linkerkamer.opvolger   = [onderdelen.Aorta]
+  onderdelen.Aorta.opvolger         = [onderdelen.Kransslagader, onderdelen.Holleader]
+  onderdelen.Kransslagader.opvolger = [onderdelen.Hart]
+  onderdelen.Hart.opvolger          = [onderdelen.Kransader]
+  onderdelen.Kransader.opvolger     = [onderdelen.Hart]
+  onderdelen.Kransader.opvolger     = [onderdelen.Rechterboezem]
+  onderdelen.Rechterboezem.opvolger = [onderdelen.Rechterkamer]
+  onderdelen.Rechterkamer.opvolger  = [onderdelen.Longslagader]
+  onderdelen.Longslagader.opvolger  = [onderdelen.Longen]
+  onderdelen.Longen.opvolger        = [onderdelen.Longader]
+  onderdelen.Longader.opvolger      = [onderdelen.Linkerboezem]
+  onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
 
   volume = 500
   while volume > 0
