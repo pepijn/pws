@@ -2,12 +2,12 @@ DIFFUSIVITEIT = 0.1
 
 HARTBOEZEM_CONTRACTIE_SNELHEID = 5
 HART_ONTSPANNING_SNELHEID = 5
-HARTKAMER_VOLUME = 80 # mL * 10
-HARTBOEZEM_VOLUME = 27 # mL * 10, 1/3 van hartkamer
+HARTKAMER_VOLUME = 800 # mL * 10
+HARTBOEZEM_VOLUME = 270 # mL * 10, 1/3 van hartkamer
 
 class Vloeistof
   constructor: ->
-    @zuurstofrijk = false
+    @binding = 'zuurstofarm'
 
 class Onderdeel
   constructor: (kleppen) ->
@@ -17,21 +17,23 @@ class Onderdeel
     # Standaard is het onderdeel (meestal bloedvat) rekbaar
     @max_volume = @volume
 
+  concentraties: (data = @bloed) ->
+    concs =
+      koolstofmonoxide: 0
+      koolstofdioxide:  0
+      zuurstofarm:      0
+      zuurstofrijk:     0
+
+    for obj in data
+      concs[obj.binding]++
+
+    concs
+
   vernieuw: ->
     @diffundeer_bloed()
 
   bloedvolume: ->
     @bloed.length
-
-  concentraties: ->
-    concs =
-      zuurstofarm:  0
-      zuurstofrijk: 0
-
-    for bloed in @bloed
-      if bloed.zuurstofrijk then concs.zuurstofrijk++ else concs.zuurstofarm++
-
-    concs
 
   diffundeer_bloed: ->
     for opvolger in @opvolger
@@ -43,9 +45,7 @@ class Onderdeel
         bloedverplaatsing += verschil
 
       # Diffusie onderdeel
-      hoeveelheid = Math.floor((@bloedvolume() - opvolger.bloedvolume()) * DIFFUSIVITEIT)
-      if hoeveelheid > 0
-        bloedverplaatsing += hoeveelheid
+      bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) * DIFFUSIVITEIT)
 
       while bloedverplaatsing > 0
         opvolger.bloed.push @bloed.shift()
@@ -94,25 +94,40 @@ class Ader extends Bloedvat
 class Orgaan extends Onderdeel
 
 class Hart extends Orgaan
+  constructor: ->
+    super
+
   vernieuw: ->
     for bloed in @bloed
-      bloed.zuurstofrijk = false
+      bloed.binding = 'koolstofdioxide' unless bloed.binding == 'koolstofmonoxide'
 
     @diffundeer_bloed()
 
 class Longen extends Orgaan
   constructor: ->
-    @lucht = 0
+    @inhoud = []
     super
 
   respireer: ->
-    @lucht = 200
+    i = 500
+    while i > 0
+      vl = new Vloeistof
+      vl.binding = if i < 200 then 'koolstofmonoxide' else 'zuurstofrijk'
+      @inhoud.push vl
+      i--
 
   vernieuw: ->
     for bloed in @bloed
-      break unless @lucht
-      bloed.zuurstofrijk = true
-      @lucht--
+      vloeistof = @inhoud[0]
+
+      # Geen beschikbaar vloeistof meer in vocht
+      break unless vloeistof?
+
+      # Geen diffusie gaande
+      continue if bloed.binding == vloeistof.binding
+
+      bloed.binding = vloeistof.binding
+      @inhoud.shift()
 
     @diffundeer_bloed()
 

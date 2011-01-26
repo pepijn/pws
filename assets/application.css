@@ -23,6 +23,8 @@ td.bloedvolume div {
   width: 0;
 }
 
+div.koolstofmonoxide { background: black; }
+div.koolstofdioxide { background: orange; }
 div.zuurstofrijk { background: red; }
 div.zuurstofarm  { background: blue; }
 

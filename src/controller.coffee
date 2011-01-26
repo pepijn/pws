@@ -1,11 +1,11 @@
 alive = false
 
 initializeOnderdelen = ->
-  window.onderdelen = {
+  window.onderdelen =
     Linkerboezem:   new Hartboezem,
     Linkerkamer:    new Hartkamer,
     Aorta:          new Onderdeel,
-    Kransslagader:  new Bloedvat(10),
+    Kransslagader:  new Bloedvat(20),
     Hart:           new Hart,
     Kransader:      new Ader,
     Holleader:      new Ader,
@@ -14,7 +14,6 @@ initializeOnderdelen = ->
     Longslagader:   new Onderdeel,
     Longen:         new Longen,
     Longader:       new Ader
-  }
 
   onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
   onderdelen.Linkerkamer.opvolger   = [onderdelen.Aorta]
@@ -30,10 +29,11 @@ initializeOnderdelen = ->
   onderdelen.Longader.opvolger      = [onderdelen.Linkerboezem]
   onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
 
-  volume = 500
-  while volume > 0
-    onderdelen.Aorta.bloed.push new Vloeistof
-    volume--
+  for onderdeel of onderdelen
+    volume = 270
+    while volume > 0
+      onderdelen[onderdeel].bloed.push new Vloeistof
+      volume--
 
 initializeView = ->
   # Set up table
@@ -43,6 +43,8 @@ initializeView = ->
         <td class="naam">' + onderdeel + '</td>
         <td class="volume"></td>
         <td class="bloedvolume">
+          <div class="koolstofmonoxide"></div>
+          <div class="koolstofdioxide"></div>
           <div class="zuurstofrijk"></div>
           <div class="zuurstofarm"></div>
         </td>
@@ -79,12 +81,16 @@ $('#parameters').submit ->
 loop_organs = ->
   for naam, onderdeel of onderdelen
     data = onderdeel.vernieuw()
+
     tr = $('#' + naam)
     tr.find('.volume').text(data.max_volume)
 
+    schaal = 14
     concs = data.concentraties()
-    tr.find('.zuurstofrijk').text(concs.zuurstofrijk).css('width', (concs.zuurstofrijk / 130) * 100 + '%')
-    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * 100 + '%')
+    tr.find('.koolstofmonoxide').css('width', (concs.koolstofmonoxide / 130) * schaal + '%')
+    tr.find('.koolstofdioxide').css('width', (concs.koolstofdioxide / 130) * schaal + '%')
+    tr.find('.zuurstofrijk').css('width', (concs.zuurstofrijk / 130) * schaal + '%')
+    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * schaal + '%')
 
 window.hartslag = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
