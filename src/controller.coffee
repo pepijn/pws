@@ -5,7 +5,7 @@ initializeOnderdelen = ->
     Linkerboezem:   new Hartboezem,
     Linkerkamer:    new Hartkamer,
     Aorta:          new Onderdeel,
-    Kransslagader:  new Bloedvat(20),
+    Kransslagader:  new Bloedvat,
     Hart:           new Hart,
     Kransader:      new Ader,
     Holleader:      new Ader,
