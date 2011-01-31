@@ -8,6 +8,7 @@ initializeOnderdelen = ->
     Kransslagader:  new Slagader,
     Hart:           new Orgaan,
     Kransader:      new Ader,
+    Aftakkingen:    new Slagader,
     Onderlichaam:   new Orgaan,
     Holleader:      new Ader,
     Rechterboezem:  new Hartboezem,
@@ -19,7 +20,7 @@ initializeOnderdelen = ->
 
   onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
   onderdelen.Linkerkamer.opvolger   = [onderdelen.Aorta]
-  onderdelen.Aorta.opvolger         = [onderdelen.Kransslagader, onderdelen.Onderlichaam]
+  onderdelen.Aorta.opvolger         = [onderdelen.Kransslagader, onderdelen.Aftakkingen]
 
   # Eerste aftakking aorta naar het hart
   onderdelen.Kransslagader.opvolger = [onderdelen.Hart]
@@ -28,6 +29,7 @@ initializeOnderdelen = ->
   onderdelen.Kransader.opvolger     = [onderdelen.Rechterboezem]
 
   # Doorstroom van de aorta naar rest v/ organen
+  onderdelen.Aftakkingen.opvolger   = [onderdelen.Onderlichaam]
   onderdelen.Onderlichaam.opvolger  = [onderdelen.Holleader]
   onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
 
