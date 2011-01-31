@@ -1,13 +1,22 @@
 body {
-  font-family: 'Courier New', sans-serif;
+  font-family: 'Lucida Grande', sans-serif;
 }
 
 table {
   width: 100%;
 }
 
+tbody tr:nth-child(even) td, tbody tr.even td { background: #F7F7F7; }
+
+fieldset {
+  border: 1px dashed #ccc;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
 td {
-  padding: 5px;
+  padding: 5px 10px;
   overflow: hidden;
 }
 
@@ -15,7 +24,7 @@ th#volume {
   width: 70%;
 }
 
-td.bloedvolume div {
+td.bloedvolume div, td.longvolume div {
   float: left;
   height: 20px;
   padding: 5px 0;

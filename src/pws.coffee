@@ -15,7 +15,9 @@ class Onderdeel
   set_stijfheid: ->
     @stijfheid = params[@bloedvat]
 
-  concentraties: (data = @bloed) ->
+  concentraties: (type = false) ->
+    data = if type == 'longen' then @vocht else @bloed
+
     concs =
       koolstofmonoxide: 0
       koolstofdioxide:  0
@@ -110,7 +112,7 @@ class Orgaan extends Onderdeel
 
 class Long extends Orgaan
   constructor: ->
-    @inhoud = []
+    @vocht = []
     super
 
   respireer: ->
@@ -118,12 +120,12 @@ class Long extends Orgaan
     while i > 0
       vl = new Vloeistof
       vl.binding = 'zuurstofrijk'
-      @inhoud.push vl
+      @vocht.push vl
       i--
 
   vernieuw: ->
     for bloed in @bloed
-      vloeistof = @inhoud[0]
+      vloeistof = @vocht[0]
 
       # Geen beschikbaar vloeistof meer in vocht
       break unless vloeistof? && bloed?
@@ -132,6 +134,6 @@ class Long extends Orgaan
       continue if bloed.binding == vloeistof.binding
 
       bloed.binding = vloeistof.binding
-      @inhoud.shift()
+      @vocht.shift()
 
     @diffundeer_bloed()

@@ -52,9 +52,21 @@ initializeView = ->
   # Set up table
   for onderdeel of onderdelen
     $('#onderdelen tbody').append('
-      <tr id="' + onderdeel + '">
+      <tr class="' + onderdeel + '">
         <td class="naam">' + onderdeel + '</td>
         <td class="bloedvolume">
+          <div class="koolstofmonoxide"></div>
+          <div class="koolstofdioxide"></div>
+          <div class="zuurstofrijk"></div>
+          <div class="zuurstofarm"></div>
+        </td>
+      </tr>')
+
+  for long in ['Linkerlong', 'Rechterlong']
+    $('#longen tbody').append('
+      <tr class="' + long + '">
+        <td class="naam">' + long + '</td>
+        <td class="longvolume">
           <div class="koolstofmonoxide"></div>
           <div class="koolstofdioxide"></div>
           <div class="zuurstofrijk"></div>
@@ -98,18 +110,25 @@ $('#parameters').submit ->
   return false
 
 loop_organs = ->
-  for naam, onderdeel of onderdelen
-    data = onderdeel.vernieuw()
+  sets =
+    onderdelen: onderdelen
+    longen:
+      Linkerlong: onderdelen.Linkerlong
+      Rechterlong: onderdelen.Rechterlong
 
-    tr = $('#' + naam)
-    tr.find('.volume').text(data.max_volume)
+  for settype, setdata of sets
+    for naam, onderdeel of setdata
+      data = onderdeel.vernieuw()
 
-    schaal = 14
-    concs = data.concentraties()
-    tr.find('.koolstofmonoxide').css('width', (concs.koolstofmonoxide / 130) * schaal + '%')
-    tr.find('.koolstofdioxide').css('width', (concs.koolstofdioxide / 130) * schaal + '%')
-    tr.find('.zuurstofrijk').css('width', (concs.zuurstofrijk / 130) * schaal + '%')
-    tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * schaal + '%')
+      tr = $('#' + settype + ' .' + naam)
+
+      schaal = 14
+      concs = data.concentraties(settype)
+
+      tr.find('.koolstofmonoxide').css('width', (concs.koolstofmonoxide / 130) * schaal + '%')
+      tr.find('.koolstofdioxide').css('width', (concs.koolstofdioxide / 130) * schaal + '%')
+      tr.find('.zuurstofrijk').css('width', (concs.zuurstofrijk / 130) * schaal + '%')
+      tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * schaal + '%')
 
 window.hartslag = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
