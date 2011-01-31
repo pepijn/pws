@@ -6,9 +6,10 @@ initializeOnderdelen = ->
     Linkerkamer:    new Hartkamer,
     Aorta:          new Onderdeel,
     Kransslagader:  new Bloedvat,
-    Hart:           new Hart,
+    Hart:           new Orgaan,
     Kransader:      new Ader,
     Holleader:      new Ader,
+    Onderlichaam:   new Orgaan,
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
     Longslagader:   new Onderdeel,
@@ -17,17 +18,23 @@ initializeOnderdelen = ->
 
   onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
   onderdelen.Linkerkamer.opvolger   = [onderdelen.Aorta]
-  onderdelen.Aorta.opvolger         = [onderdelen.Kransslagader, onderdelen.Holleader]
+  onderdelen.Aorta.opvolger         = [onderdelen.Kransslagader, onderdelen.Onderlichaam]
+
+  # Eerste aftakking aorta naar het hart
   onderdelen.Kransslagader.opvolger = [onderdelen.Hart]
   onderdelen.Hart.opvolger          = [onderdelen.Kransader]
   onderdelen.Kransader.opvolger     = [onderdelen.Hart]
   onderdelen.Kransader.opvolger     = [onderdelen.Rechterboezem]
+
+  # Doorstroom van de aorta naar rest v/ organen
+  onderdelen.Onderlichaam.opvolger  = [onderdelen.Holleader]
+  onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
+
   onderdelen.Rechterboezem.opvolger = [onderdelen.Rechterkamer]
   onderdelen.Rechterkamer.opvolger  = [onderdelen.Longslagader]
   onderdelen.Longslagader.opvolger  = [onderdelen.Longen]
   onderdelen.Longen.opvolger        = [onderdelen.Longader]
   onderdelen.Longader.opvolger      = [onderdelen.Linkerboezem]
-  onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
 
   for onderdeel of onderdelen
     volume = 270

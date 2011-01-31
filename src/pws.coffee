@@ -92,8 +92,6 @@ class Ader extends Bloedvat
     super
 
 class Orgaan extends Onderdeel
-
-class Hart extends Orgaan
   constructor: ->
     super
 
@@ -112,7 +110,7 @@ class Longen extends Orgaan
     i = 500
     while i > 0
       vl = new Vloeistof
-      vl.binding = if i < 200 then 'koolstofmonoxide' else 'zuurstofrijk'
+      vl.binding = 'zuurstofrijk'
       @inhoud.push vl
       i--
 
