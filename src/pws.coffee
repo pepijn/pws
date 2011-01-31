@@ -1,5 +1,3 @@
-DIFFUSIVITEIT = 0.1
-
 HARTBOEZEM_CONTRACTIE_SNELHEID = 5
 HART_ONTSPANNING_SNELHEID = 5
 HARTKAMER_VOLUME = 800 # mL * 10
@@ -12,10 +10,14 @@ class Vloeistof
 class Onderdeel
   constructor: (kleppen) ->
     @bloed = []
+    @bloedvat = 'haarvat'
     @kleppen = kleppen ? false
 
     # Standaard is het onderdeel (meestal bloedvat) rekbaar
     @max_volume = @volume
+
+  set_stijfheid: ->
+    @stijfheid = params[@bloedvat]
 
   concentraties: (data = @bloed) ->
     concs =
@@ -25,7 +27,7 @@ class Onderdeel
       zuurstofrijk:     0
 
     for obj in data
-      concs[obj.binding]++
+      concs[obj.binding]++ if obj?
 
     concs
 
@@ -45,7 +47,7 @@ class Onderdeel
         bloedverplaatsing += verschil
 
       # Diffusie onderdeel
-      bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) * DIFFUSIVITEIT)
+      bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) / opvolger.stijfheid)
 
       while bloedverplaatsing > 0
         opvolger.bloed.push @bloed.shift()
@@ -54,6 +56,10 @@ class Onderdeel
     return this
 
 class Hartruimte extends Onderdeel
+  constructor: ->
+    super
+    @bloedvat = 'hartruimte'
+
   vernieuw: ->
     if @contract
       # Het hart spant zich aan, hoeveel bloed wordt weggepompt?
@@ -82,14 +88,15 @@ class Hartkamer extends Hartruimte
     @volume = HARTKAMER_VOLUME
     super
 
-class Bloedvat extends Onderdeel
-  constructor: (volume) ->
-    @volume = volume
-    super
-
-class Ader extends Bloedvat
+class Ader extends Onderdeel
   constructor: ->
     super
+    @bloedvat = 'ader'
+
+class Slagader extends Onderdeel
+  constructor: ->
+    super
+    @bloedvat = 'slagader'
 
 class Orgaan extends Onderdeel
   constructor: ->
@@ -97,7 +104,7 @@ class Orgaan extends Onderdeel
 
   vernieuw: ->
     for bloed in @bloed
-      bloed.binding = 'koolstofdioxide' unless bloed.binding == 'koolstofmonoxide'
+      bloed.binding = 'koolstofdioxide' if bloed && bloed.binding != 'koolstofmonoxide'
 
     @diffundeer_bloed()
 
@@ -128,4 +135,3 @@ class Longen extends Orgaan
       @inhoud.shift()
 
     @diffundeer_bloed()
-

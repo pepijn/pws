@@ -4,8 +4,8 @@ initializeOnderdelen = ->
   window.onderdelen =
     Linkerboezem:   new Hartboezem,
     Linkerkamer:    new Hartkamer,
-    Aorta:          new Onderdeel,
-    Kransslagader:  new Bloedvat,
+    Aorta:          new Slagader,
+    Kransslagader:  new Slagader,
     Hart:           new Orgaan,
     Kransader:      new Ader,
     Holleader:      new Ader,
@@ -13,7 +13,8 @@ initializeOnderdelen = ->
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
     Longslagader:   new Onderdeel,
-    Longen:         new Longen,
+    Linkerlong:     new Onderdeel,
+    Rechterlong:    new Longen,
     Longader:       new Ader
 
   onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
@@ -32,12 +33,15 @@ initializeOnderdelen = ->
 
   onderdelen.Rechterboezem.opvolger = [onderdelen.Rechterkamer]
   onderdelen.Rechterkamer.opvolger  = [onderdelen.Longslagader]
-  onderdelen.Longslagader.opvolger  = [onderdelen.Longen]
-  onderdelen.Longen.opvolger        = [onderdelen.Longader]
+
+  # Longen
+  onderdelen.Longslagader.opvolger  = [onderdelen.Linkerlong, onderdelen.Rechterlong]
+  onderdelen.Linkerlong.opvolger    = [onderdelen.Longader]
+  onderdelen.Rechterlong.opvolger   = [onderdelen.Longader]
   onderdelen.Longader.opvolger      = [onderdelen.Linkerboezem]
 
   for onderdeel of onderdelen
-    volume = 270
+    volume = 220
     while volume > 0
       onderdelen[onderdeel].bloed.push new Vloeistof
       volume--
@@ -71,8 +75,15 @@ $('#parameters').submit ->
   onderdelen.Rechterkamer.kracht  = params.rechterkamer
   onderdelen.Linkerkamer.kracht   = params.linkerkamer
 
-  onderdelen.Longen.rendement = params.longrendement
+  # Longrendement
+  onderdelen.Rechterlong.rendement = params.rechterlongrendement
+  onderdelen.Linkerlong.rendement  = params.linkerlongrendement
+
   onderdelen.Hart.rendement   = params.hartrendement
+
+  # Stijfheid instellen
+  for onderdeel of onderdelen
+    onderdelen[onderdeel].set_stijfheid()
 
   if alive
     clearInterval(onderdelenInterval)

@@ -45,13 +45,41 @@
       <legend>Parameters</legend>
 
       <form id="parameters">
-        <label>Ademhalingsfrequentie:
-          <input name="ademhalingsfrequentie" id="ademhalingsfrequentie" type="text" value="15">
-        </label>
+        <fieldset>
+          <legend>Ademhaling</legend>
 
-        <label>Rendement longen:
-          <input name="longrendement" id="longrendement" type="text" value="100">
-        </label>
+          <label>Ademhalingsfrequentie:
+            <input name="ademhalingsfrequentie" id="ademhalingsfrequentie" type="text" value="15">
+          </label>
+
+          <label>Rendement linkerlong:
+            <input id="linkerlongrendement" type="text" value="100">
+          </label>
+
+          <label>Rendement rechterlong:
+            <input id="rechterlongrendement" type="text" value="100">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Stugheid bloedvaten</legend>
+
+          <label>Slagaders:
+            <input id="slagader" type="text" value="10">
+          </label>
+
+          <label>Haarvaten:
+            <input id="haarvat" type="text" value="30">
+          </label>
+
+          <label>Aders:
+            <input id="ader" type="text" value="20">
+          </label>
+
+          <label>Hartruimten:
+            <input id="hartruimte" type="text" value="2">
+          </label>
+        </fieldset>
 
         <table id="hart">
           <tr>
@@ -83,7 +111,7 @@
           <tr class="kamers">
             <td>
               <label>Kracht rechterkamer
-                <input name="rechterkamer" id="rechterkamer" type="text" value="80000">
+                <input name="rechterkamer" id="rechterkamer" type="text" value="60000">
               </label>
             </td>
 
