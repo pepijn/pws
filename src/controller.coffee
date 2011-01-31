@@ -54,7 +54,6 @@ initializeView = ->
     $('#onderdelen tbody').append('
       <tr id="' + onderdeel + '">
         <td class="naam">' + onderdeel + '</td>
-        <td class="volume"></td>
         <td class="bloedvolume">
           <div class="koolstofmonoxide"></div>
           <div class="koolstofdioxide"></div>
