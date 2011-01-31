@@ -124,8 +124,9 @@ class Long extends Orgaan
       i--
 
   vernieuw: ->
+    i = 0
     for bloed in @bloed
-      vloeistof = @vocht[0]
+      vloeistof = @vocht[i++]
 
       # Geen beschikbaar vloeistof meer in vocht
       break unless vloeistof? && bloed?
@@ -133,7 +134,11 @@ class Long extends Orgaan
       # Geen diffusie gaande
       continue if bloed.binding == vloeistof.binding
 
-      bloed.binding = vloeistof.binding
-      @vocht.shift()
+      # Waarschijnlijk wel diffusie gaande
+      binding = vloeistof.binding
+
+      if binding == 'zuurstofrijk' || binding == 'koolstofmonoxide'
+        vloeistof.binding = bloed.binding
+        bloed.binding = binding
 
     @diffundeer_bloed()
