@@ -1,7 +1,7 @@
 HARTBOEZEM_CONTRACTIE_SNELHEID = 5
 HART_ONTSPANNING_SNELHEID = 5
-HARTKAMER_VOLUME = 800 # mL * 10
-HARTBOEZEM_VOLUME = 270 # mL * 10, 1/3 van hartkamer
+HARTKAMER_VOLUME = 800 # staat voor 80 mL
+HARTBOEZEM_VOLUME = 270 # 1/3 van hartkamer
 
 class Vloeistof
   constructor: ->
@@ -11,10 +11,6 @@ class Onderdeel
   constructor: (kleppen) ->
     @bloed = []
     @bloedvat = 'haarvat'
-    @kleppen = kleppen ? false
-
-    # Standaard is het onderdeel (meestal bloedvat) rekbaar
-    @max_volume = @volume
 
   set_stijfheid: ->
     @stijfheid = params[@bloedvat]
@@ -50,7 +46,7 @@ class Onderdeel
       bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) / opvolger.stijfheid)
 
       while bloedverplaatsing > 0
-        opvolger.bloed.push @bloed.shift()
+        opvolger.bloed.push @bloed.shift() unless opvolger.max_volume? && opvolger.bloedvolume >= opvolger.max_volume
         bloedverplaatsing--
 
     return this
@@ -59,6 +55,10 @@ class Hartruimte extends Onderdeel
   constructor: ->
     super
     @bloedvat = 'hartruimte'
+
+  systole: ->
+    @max_volume = @bloedvolume()
+    @contract = true
 
   vernieuw: ->
     if @contract
@@ -108,7 +108,7 @@ class Orgaan extends Onderdeel
 
     @diffundeer_bloed()
 
-class Longen extends Orgaan
+class Long extends Orgaan
   constructor: ->
     @inhoud = []
     super
@@ -126,7 +126,7 @@ class Longen extends Orgaan
       vloeistof = @inhoud[0]
 
       # Geen beschikbaar vloeistof meer in vocht
-      break unless vloeistof?
+      break unless vloeistof? && bloed?
 
       # Geen diffusie gaande
       continue if bloed.binding == vloeistof.binding

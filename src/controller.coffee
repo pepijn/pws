@@ -13,8 +13,8 @@ initializeOnderdelen = ->
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
     Longslagader:   new Onderdeel,
-    Linkerlong:     new Onderdeel,
-    Rechterlong:    new Longen,
+    Linkerlong:     new Long,
+    Rechterlong:    new Long,
     Longader:       new Ader
 
   onderdelen.Linkerboezem.opvolger  = [onderdelen.Linkerkamer]
@@ -112,12 +112,12 @@ loop_organs = ->
 
 window.hartslag = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
-    onderdeel.contract = true
+    onderdeel.systole()
 
   setTimeout (->
     # Systole
     for onderdeel in [onderdelen.Linkerkamer, onderdelen.Rechterkamer]
-      onderdeel.contract = true
+      onderdeel.systole()
 
     # Diastole
     for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]
@@ -130,6 +130,7 @@ window.hartslag = ->
   ), 400
 
 window.ademhaling = ->
-  onderdelen.Longen.respireer()
+  onderdelen.Linkerlong.respireer()
+  onderdelen.Rechterlong.respireer()
 
 $('#parameters').submit()
