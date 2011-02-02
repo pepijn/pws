@@ -20,7 +20,7 @@
 
     <fieldset>
       <legend>Longvolume</legend>
-      <table id="longen">
+      <table id="lucht">
         <thead>
           <tr>
             <th>Onderdeel</th>
@@ -28,6 +28,32 @@
           </tr>
         </thead>
         <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Luchtreservoir</legend>
+      <table id="luchtreservoir">
+        <thead>
+          <tr>
+            <th class="naam">Gas</th>
+            <th>Eenheden</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Zuurstofgas</td>
+            <td class="zuurstofrijk"></td>
+          </tr>
+          <tr>
+            <td>Koolstofdioxidegas</td>
+            <td class="koolstofdioxide"></td>
+          </tr>
+          <tr>
+            <td>Koolstofmonoxidegas</td>
+            <td class="koolstofmonoxide"></td>
+          </tr>
         </tbody>
       </table>
     </fieldset>
@@ -53,18 +79,18 @@
         </fieldset>
 
         <fieldset>
-          <legend>Samenstelling buitenlucht</legend>
+          <legend>Samenstelling luchtreservoir</legend>
 
-          <label>Stikstofgas:
-            <input id="stikstofgas" type="text" value="78">%
+          <label>Zuurstofgas:
+            <input id="zuurstofgas" type="text" value="2100">
           </label>
 
-          <label>Zuurstof:
-            <input id="zuurstofgas" type="text" value="21">%
+          <label>Koolstofdioxidegas:
+            <input id="koolstofdioxidegas" type="text" value="100">
           </label>
 
-          <label>Koolstofdioxide:
-            <input id="koolstofdioxidegas" type="text" value="1">%
+          <label>Koolstofmonoxidegas:
+            <input id="koolstofmonoxidegas" type="text" value="100">
           </label>
         </fieldset>
 

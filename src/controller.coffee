@@ -45,8 +45,11 @@ initializeOnderdelen = ->
   for onderdeel of onderdelen
     volume = 220
     while volume > 0
-      onderdelen[onderdeel].bloed.push new Vloeistof
+      onderdelen[onderdeel].bloed.push new Molecuul
       volume--
+
+  # Luchtreservoir initialiseren
+  window.luchtreservoir = new Luchtreservoir
 
 initializeView = ->
   # Set up table
@@ -63,7 +66,7 @@ initializeView = ->
       </tr>')
 
   for long in ['Linkerlong', 'Rechterlong']
-    $('#longen tbody').append('
+    $('#lucht tbody').append('
       <tr class="' + long + '">
         <td class="naam">' + long + '</td>
         <td class="longvolume">
@@ -98,6 +101,23 @@ $('#parameters').submit ->
   for onderdeel of onderdelen
     onderdelen[onderdeel].set_stijfheid()
 
+  # Luchtresevoir vullen
+  concs =
+    koolstofmonoxide: params.koolstofmonoxidegas
+    koolstofdioxide:  params.koolstofdioxidegas
+    zuurstofrijk:     params.zuurstofgas
+    stikstof:         params.stikstofgas
+
+  for binding, eenheden of concs
+    i = eenheden
+    while i > 0
+      luchtreservoir.inhoud.push new Molecuul(binding)
+      i--
+
+  shuffle luchtreservoir.inhoud
+
+  console.debug luchtreservoir.concentraties('lucht')
+
   if alive
     clearInterval(onderdelenInterval)
     clearInterval(hartcyclusInterval)
@@ -112,7 +132,7 @@ $('#parameters').submit ->
 loop_organs = ->
   sets =
     onderdelen: onderdelen
-    longen:
+    lucht:
       Linkerlong: onderdelen.Linkerlong
       Rechterlong: onderdelen.Rechterlong
 
@@ -125,10 +145,15 @@ loop_organs = ->
       schaal = 14
       concs = data.concentraties(settype)
 
-      tr.find('.koolstofmonoxide').css('width', (concs.koolstofmonoxide / 130) * schaal + '%')
-      tr.find('.koolstofdioxide').css('width', (concs.koolstofdioxide / 130) * schaal + '%')
-      tr.find('.zuurstofrijk').css('width', (concs.zuurstofrijk / 130) * schaal + '%')
-      tr.find('.zuurstofarm').css('width', (concs.zuurstofarm / 130) * schaal + '%')
+      for gas of concs
+        tr.find('.' + gas).css('width', (concs[gas] / 130) * schaal + '%')
+
+  # Laat concentraties luchtreservoir zien
+  data = luchtreservoir.concentraties('lucht')
+  table = $('#luchtreservoir')
+
+  for gas, eenheden of data
+    table.find('.' + gas).text(eenheden)
 
 window.hartslag = ->
   for onderdeel in [onderdelen.Linkerboezem, onderdelen.Rechterboezem]

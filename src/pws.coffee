@@ -1,22 +1,13 @@
-HARTBOEZEM_CONTRACTIE_SNELHEID = 5
-HART_ONTSPANNING_SNELHEID = 5
 HARTKAMER_VOLUME = 800 # staat voor 80 mL
 HARTBOEZEM_VOLUME = 270 # 1/3 van hartkamer
 
-class Vloeistof
-  constructor: ->
-    @binding = 'zuurstofarm'
+class Molecuul
+  constructor: (binding) ->
+    @binding = binding ? 'zuurstofarm'
 
-class Onderdeel
-  constructor: (kleppen) ->
-    @bloed = []
-    @bloedvat = 'haarvat'
-
-  set_stijfheid: ->
-    @stijfheid = params[@bloedvat]
-
-  concentraties: (type = false) ->
-    data = if type == 'longen' then @vocht else @bloed
+class ConcentratieHouder
+  concentraties: (type) ->
+    data = if type == 'lucht' then @inhoud else @bloed
 
     concs =
       koolstofmonoxide: 0
@@ -28,6 +19,18 @@ class Onderdeel
       concs[obj.binding]++ if obj?
 
     concs
+
+class Luchtreservoir extends ConcentratieHouder
+  constructor: ->
+    @inhoud = []
+
+class Onderdeel extends ConcentratieHouder
+  constructor: (kleppen) ->
+    @bloed = []
+    @bloedvat = 'haarvat'
+
+  set_stijfheid: ->
+    @stijfheid = params[@bloedvat]
 
   vernieuw: ->
     @diffundeer_bloed()
@@ -112,21 +115,36 @@ class Orgaan extends Onderdeel
 
 class Long extends Orgaan
   constructor: ->
-    @vocht = []
+    @inhoud = []
     super
 
   respireer: ->
     i = 500
     while i > 0
-      vl = new Vloeistof
+      vl = new Molecuul
       vl.binding = 'zuurstofrijk'
-      @vocht.push vl
+      @inhoud.push vl
       i--
+
+  diffundeer_lucht: ->
+    luchtverplaatsing = 0
+
+    # Duw bloed wat het niet kan hebben naar volgende onderdeel
+    verschil = @bloedvolume() - @max_volume
+    if @max_volume? and verschil > 0
+      bloedverplaatsing += verschil
+
+    # Diffusie onderdeel
+    bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) / opvolger.stijfheid)
+
+    while bloedverplaatsing > 0
+      opvolger.bloed.push @bloed.shift()
+      bloedverplaatsing--
 
   vernieuw: ->
     i = 0
     for bloed in @bloed
-      vloeistof = @vocht[i++]
+      vloeistof = @inhoud[i++]
 
       # Geen beschikbaar vloeistof meer in vocht
       break unless vloeistof? && bloed?
@@ -141,4 +159,5 @@ class Long extends Orgaan
         vloeistof.binding = bloed.binding
         bloed.binding = binding
 
+    # @diffundeer_lucht()
     @diffundeer_bloed()

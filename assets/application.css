@@ -20,8 +20,8 @@ td {
   overflow: hidden;
 }
 
-th#volume {
-  width: 70%;
+td.naam, th.naam {
+  width: 30%;
 }
 
 td.bloedvolume div, td.longvolume div {
