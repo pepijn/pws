@@ -91,6 +91,10 @@ $('#parameters').submit ->
   onderdelen.Rechterkamer.kracht  = params.rechterkamer
   onderdelen.Linkerkamer.kracht   = params.linkerkamer
 
+  # Ademsnelheid
+  onderdelen.Rechterlong.kracht = params.rechterademhalingskracht
+  onderdelen.Linkerlong.kracht  = params.linkerademhalingskracht
+
   # Longrendement
   onderdelen.Rechterlong.rendement = params.rechterlongrendement
   onderdelen.Linkerlong.rendement  = params.linkerlongrendement
@@ -101,12 +105,12 @@ $('#parameters').submit ->
   for onderdeel of onderdelen
     onderdelen[onderdeel].set_stijfheid()
 
-  # Luchtresevoir vullen
+  # Luchtresevoir legen en vullen
+  luchtreservoir.inhoud = []
   concs =
     koolstofmonoxide: params.koolstofmonoxidegas
     koolstofdioxide:  params.koolstofdioxidegas
     zuurstofrijk:     params.zuurstofgas
-    stikstof:         params.stikstofgas
 
   for binding, eenheden of concs
     i = eenheden
@@ -114,17 +118,14 @@ $('#parameters').submit ->
       luchtreservoir.inhoud.push new Molecuul(binding)
       i--
 
-  shuffle luchtreservoir.inhoud
-
-  console.debug luchtreservoir.concentraties('lucht')
-
   if alive
-    clearInterval(onderdelenInterval)
-    clearInterval(hartcyclusInterval)
+    clearInterval onderdelenInterval
+    clearInterval hartcyclusInterval
+    clearInterval ventilatieInterval
 
   window.onderdelenInterval = setInterval(loop_organs, 30)
   window.hartcyclusInterval = setInterval(hartslag, (60/params.hartslag) * 1000)
-  window.ventilatieInterval = setInterval(ademhaling, (60/params.ademhalingsfrequentie) * 1000)
+  window.ventilatieInterval = setInterval(inademen, (60/params.ademhalingsfrequentie) * 1000)
 
   alive = true
   return false
@@ -174,8 +175,14 @@ window.hartslag = ->
       onderdeel.contract = false
   ), 400
 
-window.ademhaling = ->
-  onderdelen.Linkerlong.respireer()
-  onderdelen.Rechterlong.respireer()
+window.inademen = ->
+  onderdelen.Linkerlong.inademen()
+  onderdelen.Rechterlong.inademen()
+
+  setTimeout uitademen, params.ademinhoudingstijd * 1000
+
+window.uitademen = ->
+  onderdelen.Linkerlong.uitademen()
+  onderdelen.Rechterlong.uitademen()
 
 $('#parameters').submit()

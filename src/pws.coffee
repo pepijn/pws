@@ -116,35 +116,56 @@ class Orgaan extends Onderdeel
 class Long extends Orgaan
   constructor: ->
     @inhoud = []
+    @max_longvolume = 800
+
+    # Niet inademen en niet uitademen
+    @status = false
+
     super
 
-  respireer: ->
-    i = 500
-    while i > 0
-      vl = new Molecuul
-      vl.binding = 'zuurstofrijk'
-      @inhoud.push vl
-      i--
+  longvolume: ->
+    @inhoud.length
+
+  inademen: ->
+    # Laat lucht in reservoir verspreiden
+    luchtreservoir.inhoud.sort ->
+      0.5 - Math.random()
+
+    @status = 'inademen'
+
+  uitademen: ->
+    # Laat lucht in longen verspreiden
+    @inhoud.sort ->
+      0.5 - Math.random()
+
+    @status = 'uitademen'
 
   diffundeer_lucht: ->
-    luchtverplaatsing = 0
+    if @status == 'inademen'
+      hoeveelheid = (@max_longvolume - @longvolume()) / @rendement
+      while hoeveelheid > 0
+        if @longvolume() >= @max_longvolume
+          # Longen vol met lucht
+          @status = false
+          break
 
-    # Duw bloed wat het niet kan hebben naar volgende onderdeel
-    verschil = @bloedvolume() - @max_volume
-    if @max_volume? and verschil > 0
-      bloedverplaatsing += verschil
+        @inhoud.push luchtreservoir.inhoud.shift()
+        hoeveelheid--
+    else if @status == 'uitademen'
+      hoeveelheid = @longvolume() / @rendement
+      while hoeveelheid > 0
+        if @longvolume() <= 0
+          # Longen leeg
+          @status = false
+          break
 
-    # Diffusie onderdeel
-    bloedverplaatsing += Math.ceil((@bloedvolume() - opvolger.bloedvolume()) / opvolger.stijfheid)
-
-    while bloedverplaatsing > 0
-      opvolger.bloed.push @bloed.shift()
-      bloedverplaatsing--
+        luchtreservoir.inhoud.push @inhoud.shift()
+        hoeveelheid--
 
   vernieuw: ->
     i = 0
-    for bloed in @bloed
-      vloeistof = @inhoud[i++]
+    for bloed of @bloed
+      vloeistof = @inhoud[i]
 
       # Geen beschikbaar vloeistof meer in vocht
       break unless vloeistof? && bloed?
@@ -159,5 +180,7 @@ class Long extends Orgaan
         vloeistof.binding = bloed.binding
         bloed.binding = binding
 
-    # @diffundeer_lucht()
+      i--
+
+    @diffundeer_lucht()
     @diffundeer_bloed()
