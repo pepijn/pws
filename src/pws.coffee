@@ -7,7 +7,7 @@ class Molecuul
 
   verbrand: ->
     if @binding == 'zuurstofrijk'
-      @binding = 'koolstofdioxide'
+      @binding = 'koolstofdioxide' if Math.random() > onderdelen.Hart.rendement
       true
     else
       false
@@ -78,8 +78,8 @@ class Hartruimte extends Onderdeel
 
       while i > 0
         if @max_volume > 0
-          # Checken of er zuurstof te verbranden is
-          for bloed in @bloed
+          # Checken of er zuurstof te verbranden is in de hartspier
+          for bloed in onderdelen.Hart.bloed
             if bloed.verbrand()
               @max_volume--
               break

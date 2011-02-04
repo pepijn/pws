@@ -99,8 +99,7 @@ $('#parameters').submit ->
   onderdelen.Rechterlong.rendement = params.rechterlongrendement
   onderdelen.Linkerlong.rendement  = params.linkerlongrendement
 
-  onderdelen.Hart.energieverbruik = params.energieverbruik
-  onderdelen.Hart.energie = 0
+  onderdelen.Hart.rendement = params.hartrendement / 100
 
   # Stijfheid instellen
   for onderdeel of onderdelen
