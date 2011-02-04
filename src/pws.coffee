@@ -3,7 +3,14 @@ HARTBOEZEM_VOLUME = 270 # 1/3 van hartkamer
 
 class Molecuul
   constructor: (binding) ->
-    @binding = binding ? 'zuurstofarm'
+    @binding = binding ? 'zuurstofrijk'
+
+  verbrand: ->
+    if @binding == 'zuurstofrijk'
+      @binding = 'koolstofdioxide'
+      true
+    else
+      false
 
 class ConcentratieHouder
   concentraties: (type) ->
@@ -12,7 +19,6 @@ class ConcentratieHouder
     concs =
       koolstofmonoxide: 0
       koolstofdioxide:  0
-      zuurstofarm:      0
       zuurstofrijk:     0
 
     for obj in data
@@ -72,7 +78,11 @@ class Hartruimte extends Onderdeel
 
       while i > 0
         if @max_volume > 0
-          @max_volume--
+          # Checken of er zuurstof te verbranden is
+          for bloed in @bloed
+            if bloed.verbrand()
+              @max_volume--
+              break
         else
           @contract = false
 
@@ -163,9 +173,13 @@ class Long extends Orgaan
         hoeveelheid--
 
   vernieuw: ->
-    i = 0
-    for bloed of @bloed
-      vloeistof = @inhoud[i]
+    i = 50
+    longvolume = @longvolume()
+    bloedvolume = @bloedvolume()
+
+    while i > 0
+      vloeistof = @inhoud[Math.floor(Math.random() * longvolume)]
+      bloed = @bloed[Math.floor(Math.random() * bloedvolume)]
 
       # Geen beschikbaar vloeistof meer in vocht
       break unless vloeistof? && bloed?

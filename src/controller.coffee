@@ -6,7 +6,7 @@ initializeOnderdelen = ->
     Linkerkamer:    new Hartkamer,
     Aorta:          new Slagader,
     Kransslagader:  new Slagader,
-    Hart:           new Orgaan,
+    Hart:           new Onderdeel,
     Kransader:      new Ader,
     Aftakkingen:    new Slagader,
     Onderlichaam:   new Orgaan,
@@ -99,7 +99,8 @@ $('#parameters').submit ->
   onderdelen.Rechterlong.rendement = params.rechterlongrendement
   onderdelen.Linkerlong.rendement  = params.linkerlongrendement
 
-  onderdelen.Hart.rendement   = params.hartrendement
+  onderdelen.Hart.energieverbruik = params.energieverbruik
+  onderdelen.Hart.energie = 0
 
   # Stijfheid instellen
   for onderdeel of onderdelen
@@ -124,7 +125,9 @@ $('#parameters').submit ->
     clearInterval ventilatieInterval
 
   window.onderdelenInterval = setInterval(loop_organs, 30)
+  hartslag()
   window.hartcyclusInterval = setInterval(hartslag, (60/params.hartslag) * 1000)
+  inademen()
   window.ventilatieInterval = setInterval(inademen, (60/params.ademhalingsfrequentie) * 1000)
 
   alive = true
