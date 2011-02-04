@@ -5,9 +5,9 @@ class Molecuul
   constructor: (binding) ->
     @binding = binding ? 'zuurstofrijk'
 
-  verbrand: ->
+  verbrand: (caller) ->
     if @binding == 'zuurstofrijk'
-      @binding = 'koolstofdioxide' if Math.random() > onderdelen.Hart.rendement
+      @binding = 'koolstofdioxide' if Math.random() > caller.rendement
       true
     else
       false
@@ -80,7 +80,7 @@ class Hartruimte extends Onderdeel
         if @max_volume > 0
           # Checken of er zuurstof te verbranden is in de hartspier
           for bloed in onderdelen.Hart.bloed
-            if bloed.verbrand()
+            if bloed.verbrand(onderdelen.Hart)
               @max_volume--
               break
         else
@@ -113,17 +113,7 @@ class Slagader extends Onderdeel
     super
     @bloedvat = 'slagader'
 
-class Orgaan extends Onderdeel
-  constructor: ->
-    super
-
-  vernieuw: ->
-    for bloed in @bloed
-      bloed.binding = 'koolstofdioxide' if bloed && bloed.binding != 'koolstofmonoxide'
-
-    @diffundeer_bloed()
-
-class Long extends Orgaan
+class Long extends Onderdeel
   constructor: ->
     @inhoud = []
     @max_longvolume = 800
@@ -152,17 +142,21 @@ class Long extends Orgaan
 
   diffundeer_lucht: ->
     if @status == 'inademen'
-      hoeveelheid = (@max_longvolume - @longvolume()) / @rendement
+      hoeveelheid = (@max_longvolume - @longvolume()) / @snelheid
       while hoeveelheid > 0
         if @longvolume() >= @max_longvolume
           # Longen vol met lucht
           @status = false
           break
 
-        @inhoud.push luchtreservoir.inhoud.shift()
+        for bloed in onderdelen.Onderlichaam.bloed
+          if bloed.verbrand(this)
+            @inhoud.push luchtreservoir.inhoud.shift()
+            break
+
         hoeveelheid--
     else if @status == 'uitademen'
-      hoeveelheid = @longvolume() / @rendement
+      hoeveelheid = @longvolume() / @snelheid
       while hoeveelheid > 0
         if @longvolume() <= 0
           # Longen leeg

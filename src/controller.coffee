@@ -9,7 +9,7 @@ initializeOnderdelen = ->
     Hart:           new Onderdeel,
     Kransader:      new Ader,
     Aftakkingen:    new Slagader,
-    Onderlichaam:   new Orgaan,
+    Onderlichaam:   new Onderdeel,
     Holleader:      new Ader,
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
@@ -92,12 +92,12 @@ $('#parameters').submit ->
   onderdelen.Linkerkamer.kracht   = params.linkerkamer
 
   # Ademsnelheid
-  onderdelen.Rechterlong.kracht = params.rechterademhalingskracht
-  onderdelen.Linkerlong.kracht  = params.linkerademhalingskracht
+  onderdelen.Rechterlong.snelheid  = params.ademhalingssnelheid
+  onderdelen.Linkerlong.snelheid  = params.ademhalingssnelheid
 
   # Longrendement
-  onderdelen.Rechterlong.rendement = params.rechterlongrendement
-  onderdelen.Linkerlong.rendement  = params.linkerlongrendement
+  onderdelen.Rechterlong.rendement = params.rechterlongrendement / 100
+  onderdelen.Linkerlong.rendement  = params.linkerlongrendement / 100
 
   onderdelen.Hart.rendement = params.hartrendement / 100
 
