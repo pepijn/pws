@@ -9,7 +9,7 @@ initializeOnderdelen = ->
     Hart:           new Onderdeel,
     Kransader:      new Ader,
     Aftakkingen:    new Slagader,
-    Onderlichaam:   new Onderdeel,
+    Middenrifspier: new Onderdeel,
     Holleader:      new Ader,
     Rechterboezem:  new Hartboezem,
     Rechterkamer:   new Hartkamer,
@@ -29,9 +29,9 @@ initializeOnderdelen = ->
   onderdelen.Kransader.opvolger     = [onderdelen.Rechterboezem]
 
   # Doorstroom van de aorta naar rest v/ organen
-  onderdelen.Aftakkingen.opvolger   = [onderdelen.Onderlichaam]
-  onderdelen.Onderlichaam.opvolger  = [onderdelen.Holleader]
-  onderdelen.Holleader.opvolger     = [onderdelen.Rechterboezem]
+  onderdelen.Aftakkingen.opvolger    = [onderdelen.Middenrifspier]
+  onderdelen.Middenrifspier.opvolger = [onderdelen.Holleader]
+  onderdelen.Holleader.opvolger      = [onderdelen.Rechterboezem]
 
   onderdelen.Rechterboezem.opvolger = [onderdelen.Rechterkamer]
   onderdelen.Rechterkamer.opvolger  = [onderdelen.Longslagader]
@@ -126,7 +126,6 @@ $('#parameters').submit ->
   window.onderdelenInterval = setInterval(loop_organs, 30)
   hartslag()
   window.hartcyclusInterval = setInterval(hartslag, (60/params.hartslag) * 1000)
-  inademen()
   window.ventilatieInterval = setInterval(inademen, (60/params.ademhalingsfrequentie) * 1000)
 
   alive = true

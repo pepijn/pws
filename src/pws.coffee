@@ -149,7 +149,7 @@ class Long extends Onderdeel
           @status = false
           break
 
-        for bloed in onderdelen.Onderlichaam.bloed
+        for bloed in onderdelen.Middenrifspier.bloed
           if bloed.verbrand(this)
             @inhoud.push luchtreservoir.inhoud.shift()
             break
