@@ -103,12 +103,14 @@ class Hartkamer extends Hartruimte
     @volume = HARTKAMER_VOLUME
     super
 
-class Ader extends Onderdeel
+class Bloedvat extends Onderdeel
+
+class Ader extends Bloedvat
   constructor: ->
     super
     @bloedvat = 'ader'
 
-class Slagader extends Onderdeel
+class Slagader extends Bloedvat
   constructor: ->
     super
     @bloedvat = 'slagader'
