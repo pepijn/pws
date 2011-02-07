@@ -198,7 +198,7 @@ $('#parameters').submit()
 
 # Scenario's
 $('#hartaanval').click ->
-  onderdelen.Kransslagader.stijfheid = 100000
+  onderdelen.Kransslagader.stijfheid = 1000
 
 $('#koolstofmonoxidevergifitiging').click ->
   i = 10000
@@ -207,4 +207,4 @@ $('#koolstofmonoxidevergifitiging').click ->
     i--
 
 $('#longembolie').click ->
-  onderdelen.Linkerlong.stijfheid = 100000
+  onderdelen.Linkerlong.stijfheid = 1000
