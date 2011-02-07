@@ -99,6 +99,13 @@ $('#parameters').submit ->
   onderdelen.Rechterlong.rendement = params.rechterlongrendement / 100
   onderdelen.Linkerlong.rendement  = params.linkerlongrendement / 100
 
+  # Longcapaciteit en restvolume
+  onderdelen.Rechterlong.capaciteit = params.longcapaciteit
+  onderdelen.Linkerlong.capaciteit  = params.longcapaciteit
+  onderdelen.Rechterlong.restvolume = params.longrestvolume
+  onderdelen.Linkerlong.restvolume  = params.longrestvolume
+
+
   onderdelen.Hart.rendement = params.hartrendement / 100
 
   # Stijfheid instellen
@@ -126,6 +133,7 @@ $('#parameters').submit ->
   window.onderdelenInterval = setInterval(loop_organs, 30)
   hartslag()
   window.hartcyclusInterval = setInterval(hartslag, (60/params.hartslag) * 1000)
+  inademen()
   window.ventilatieInterval = setInterval(inademen, (60/params.ademhalingsfrequentie) * 1000)
 
   alive = true

@@ -118,7 +118,6 @@ class Slagader extends Bloedvat
 class Long extends Onderdeel
   constructor: ->
     @inhoud = []
-    @max_longvolume = 800
 
     # Niet inademen en niet uitademen
     @status = false
@@ -144,7 +143,7 @@ class Long extends Onderdeel
 
   diffundeer_lucht: ->
     if @status == 'inademen'
-      hoeveelheid = (@max_longvolume - @longvolume()) / @snelheid
+      hoeveelheid = (@capaciteit - @longvolume()) / @snelheid
       while hoeveelheid > 0
         if @longvolume() >= @max_longvolume
           # Longen vol met lucht
@@ -158,9 +157,9 @@ class Long extends Onderdeel
 
         hoeveelheid--
     else if @status == 'uitademen'
-      hoeveelheid = @longvolume() / @snelheid
+      hoeveelheid = (@longvolume() - @restvolume) / @snelheid
       while hoeveelheid > 0
-        if @longvolume() <= 0
+        if @longvolume() <= @restvolume
           # Longen leeg
           @status = false
           break
