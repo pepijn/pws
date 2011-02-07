@@ -187,3 +187,13 @@ window.uitademen = ->
   onderdelen.Rechterlong.uitademen()
 
 $('#parameters').submit()
+
+# Scenario's
+$('#hartaanval').click ->
+  onderdelen.Kransslagader.stijfheid = 100000
+
+$('#koolstofmonoxidevergifitiging').click ->
+  i = 10000
+  while i > 0
+    luchtreservoir.inhoud.push new Molecuul('koolstofmonoxide')
+    i--
