@@ -205,3 +205,6 @@ $('#koolstofmonoxidevergifitiging').click ->
   while i > 0
     luchtreservoir.inhoud.push new Molecuul('koolstofmonoxide')
     i--
+
+$('#longembolie').click ->
+  onderdelen.Linkerlong.stijfheid = 100000
